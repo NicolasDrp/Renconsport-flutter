@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({super.key, required this.storage});
+
+final FlutterSecureStorage storage;
 
   @override
   State<Profile> createState() => _ProfileState();
