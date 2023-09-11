@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.storage});
+
+  final FlutterSecureStorage storage;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -11,9 +14,7 @@ class _HomePageState extends State<HomePage> {
   bool isLogged = true;
   @override
   Widget build(BuildContext context) {
-    if (!isLogged) {
-      Navigator.pushNamed(context, '/login');
-    }
+    checkLogged();
     return Scaffold(
       appBar: AppBar(
         leading: Image.asset('assets/logo_appbar.png'),
@@ -31,7 +32,8 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.black,
               ))
         ],
-      ),bottomNavigationBar: BottomAppBar(),
+      ),
+      bottomNavigationBar: BottomAppBar(),
       body: Column(
         children: [
           FloatingActionButton(
@@ -43,5 +45,17 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void checkLogged() async {
+    if (!await widget.storage.containsKey(key: "token")) {
+      redirect();
+    } else {
+      print(await widget.storage.read(key: "token"));
+    }
+  }
+
+  void redirect() {
+    Navigator.pushReplacementNamed(context, '/login');
   }
 }
