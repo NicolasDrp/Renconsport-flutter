@@ -4,7 +4,6 @@ import 'package:renconsport_flutter/screen/Register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:renconsport_flutter/screen/homepage.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.storage});
@@ -75,7 +74,6 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             logUser();
-                            //TODO: faire la logique de connexion (Recup JWT + stock en cache)
                           }
                         },
                         child: const Text("Se connecter")),
@@ -113,7 +111,7 @@ class _LoginState extends State<Login> {
     String email = _emailController.text;
     String password = _passwordController.text;
     http
-        .post(Uri.parse("http://192.168.1.121:8000/api/login_check"),
+        .post(Uri.parse("http://192.168.43.181:8000/api/login_check"),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
