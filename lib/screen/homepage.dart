@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:renconsport_flutter/modal/user.dart';
 import 'package:renconsport_flutter/widgets/ProfileCard.dart';
 import 'package:renconsport_flutter/widgets/example_candidate_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/widgets/bottomAppBar.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.storage});
@@ -19,9 +23,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AppinioSwiperController controller = AppinioSwiperController();
   bool isLogged = true;
+  late Future<User> futureUser;
   @override
+  void initState() {
+    super.initState();
+    futureUser = fetchUser();
+  }
+
   Widget build(BuildContext context) {
-    // checkLogged();
+    checkLogged();
     return Scaffold(
       appBar: AppBar(
         leading: Image.asset('assets/logo_appbar.png'),
@@ -43,12 +53,6 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomAppBarWidget(),
       body: Column(
         children: [
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/test');
-            },
-          ),
-          Text("homepage"),
           CupertinoPageScaffold(
             child: Column(
               children: [
@@ -79,6 +83,20 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+          Text("homepage"),
+          FutureBuilder<User>(
+            future: futureUser,
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data != null) {
+                return Text(snapshot.data!.email);
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
+          )
         ],
       ),
     );
@@ -110,5 +128,31 @@ class _HomePageState extends State<HomePage> {
 
   void _onEnd() {
     log("end reached!");
+  }
+
+  Future<User> fetchUser() async {
+    String? token = await widget.storage.read(key: "token");
+    if (token == null) {
+      throw Exception(
+          ("Token not found")); // Gérer le cas où le token n'est pas disponible
+    }
+    final response = await http
+        .get(Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'), headers: {
+      HttpHeaders.authorizationHeader: token,
+    });
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      final responseJson = jsonDecode(response.body);
+      print(responseJson);
+      print(responseJson.data);
+      return User.fromJson(responseJson.data);
+      //return User.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load User');
+    }
   }
 }
