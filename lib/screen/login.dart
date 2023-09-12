@@ -113,7 +113,7 @@ class _LoginState extends State<Login> {
     String email = _emailController.text;
     String password = _passwordController.text;
     http
-        .post(Uri.parse("http://192.168.1.121:8000/api/login_check"),
+        .post(Uri.parse("http://192.168.43.159:8000/api/login_check"),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },

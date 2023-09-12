@@ -1,4 +1,9 @@
+import 'dart:developer';
+import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:renconsport_flutter/widgets/ProfileCard.dart';
+import 'package:renconsport_flutter/widgets/example_candidate_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/widgets/bottomAppBar.dart';
 
@@ -12,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AppinioSwiperController controller = AppinioSwiperController();
   bool isLogged = true;
   @override
   Widget build(BuildContext context) {
@@ -39,10 +45,40 @@ class _HomePageState extends State<HomePage> {
         children: [
           FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context, '/test');
             },
           ),
-          Text("homepage")
+          Text("homepage"),
+          CupertinoPageScaffold(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.70,
+                  child: AppinioSwiper(
+                    padding: EdgeInsets.all(0),
+                    backgroundCardsCount: 0,
+                    swipeOptions:
+                        const AppinioSwipeOptions.symmetric(horizontal: true),
+                    unlimitedUnswipe: true,
+                    controller: controller,
+                    unswipe: _unswipe,
+                    onSwiping: (AppinioSwiperDirection direction) {
+                      debugPrint(direction.toString());
+                    },
+                    onSwipe: _swipe,
+                    onEnd: _onEnd,
+                    cardsCount: candidates.length,
+                    cardsBuilder: (BuildContext context, int index) {
+                      return ProfileCard(
+                        candidate: candidates[index],
+                        controller: controller,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -58,5 +94,21 @@ class _HomePageState extends State<HomePage> {
 
   void redirect() {
     Navigator.pushReplacementNamed(context, '/login');
+  }
+
+  void _swipe(int index, AppinioSwiperDirection direction) {
+    log("the card was swiped to the: " + direction.name);
+  }
+
+  void _unswipe(bool unswiped) {
+    if (unswiped) {
+      log("SUCCESS: card was unswiped");
+    } else {
+      log("FAIL: no card left to unswipe");
+    }
+  }
+
+  void _onEnd() {
+    log("end reached!");
   }
 }
