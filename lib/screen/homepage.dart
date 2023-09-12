@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:renconsport_flutter/widgets/bottomAppBar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.storage});
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   bool isLogged = true;
   @override
   Widget build(BuildContext context) {
-    checkLogged();
+    // checkLogged();
     return Scaffold(
       appBar: AppBar(
         leading: Image.asset('assets/logo_appbar.png'),
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
               ))
         ],
       ),
-      bottomNavigationBar: BottomAppBar(),
+      bottomNavigationBar: BottomAppBarWidget(),
       body: Column(
         children: [
           FloatingActionButton(
