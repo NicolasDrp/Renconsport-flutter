@@ -7,20 +7,25 @@ import 'package:renconsport_flutter/screen/parameters.dart';
 import 'package:renconsport_flutter/screen/profile.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
 
+const String urlApi = "https://renconsport-api.osc-fr1.scalingo.io/api";
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterSecureStorage storage = FlutterSecureStorage();
+  FlutterSecureStorage storage = const FlutterSecureStorage();
   runApp(MainApp(storage: storage));
 }
 
 class MainApp extends StatelessWidget {
   final FlutterSecureStorage storage;
 
-  MainApp({required this.storage, super.key});
+  const MainApp({required this.storage, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       routes: {
         '/': (context) => HomePage(storage: storage),
         '/login': (context) => Login(storage: storage),
