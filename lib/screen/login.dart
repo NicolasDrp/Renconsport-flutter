@@ -37,19 +37,16 @@ class _LoginState extends State<Login> {
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: 20.0,
-                vertical: MediaQuery.of(context).size.height * 0.05),
+                vertical: MediaQuery.of(context).size.height * 0.1),
             child: Card(
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
               child: Form(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 40),
-                      child: Image(
-                          image: AssetImage("assets/logo_page_login.png")),
-                    ),
+                    const Image(
+                        image: AssetImage("assets/logo_page_login.png")),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomInput(
