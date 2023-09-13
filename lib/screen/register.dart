@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:renconsport_flutter/main.dart';
@@ -23,13 +24,15 @@ class _RegisterState extends State<Register> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _townController = TextEditingController();
   String? selectedGender;
+  bool cguChecked = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xffFAFAFA),
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: FloatingActionButton(
           onPressed: () {
             Navigator.pop(context);
@@ -58,6 +61,7 @@ class _RegisterState extends State<Register> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: DropdownMenu<String>(
+                  width: MediaQuery.of(context).size.width - 40,
                   inputDecorationTheme: const InputDecorationTheme(
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.orange)),
@@ -80,7 +84,41 @@ class _RegisterState extends State<Register> {
               ),
               CustomInput(label: "Age", controller: _ageController),
               CustomInput(label: "Ville", controller: _townController),
-              //TODO la checklist des cgu
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Checkbox(
+                      value: cguChecked,
+                      onChanged: ((value) {
+                        setState(() {
+                          cguChecked = value!;
+                        });
+                      })),
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(color: Colors.black),
+                      children: <TextSpan>[
+                        const TextSpan(text: "J'accepte les"),
+                        TextSpan(
+                            text: " Conditions Générales d'Utilisation",
+                            style: const TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline),
+                            recognizer: TapGestureRecognizer()
+                              // TODO remplacer le lien vers les CGU
+                              ..onTap = () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Register()));
+                              })
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // TODO: sports pratiqués
               CustomElevatedButton(
                   hasIcon: false,
                   icon: const Icon(Icons.abc),
@@ -163,12 +201,43 @@ class _RegisterState extends State<Register> {
       hasError = true;
       return;
     }
-    // Verifies that the use is at least 13 years old
+    // Verifies that the user is at least 13 years old
     if (int.parse(_ageController.text) < 13) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
               "Vous devez être agé d'au moins 13 ans pour vous inscrire sur l'application"),
+        ),
+      );
+      hasError = true;
+      return;
+    }
+    // Verifies that the gender is selected
+    if (selectedGender == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Veuillez sélectionner votre genre"),
+        ),
+      );
+      hasError = true;
+      return;
+    }
+    // Verifies that the town is selected
+    if (_townController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Veuillez sélectionner votre ville"),
+        ),
+      );
+      hasError = true;
+      return;
+    }
+    // Verifies that the CGU is checked
+    if (cguChecked == false) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              "Vous devez accepter les conditions générales d'utilisation"),
         ),
       );
       hasError = true;
@@ -180,8 +249,6 @@ class _RegisterState extends State<Register> {
   }
 
   void sendForm() {
-    print("sending");
-    //TODO: fix le parse de l'age
     http
         .post(Uri.parse("$urlApi/users"),
             headers: {
@@ -200,7 +267,6 @@ class _RegisterState extends State<Register> {
             }))
         .then((response) {
       if (response.statusCode == 201) {
-        print("success");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Votre compte a bien été créé"),
@@ -208,7 +274,6 @@ class _RegisterState extends State<Register> {
         );
         Navigator.pop(context);
       } else {
-        print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Une erreur est survenue"),
