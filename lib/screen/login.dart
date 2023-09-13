@@ -5,6 +5,8 @@ import 'package:renconsport_flutter/screen/Register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
+import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.storage});
@@ -16,7 +18,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -41,62 +42,52 @@ class _LoginState extends State<Login> {
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
               child: Form(
-                key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Image(
-                        image: AssetImage("assets/logo_page_login.png")),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: "Email",
-                      ),
-                      validator: (value) {
-                        if (value == "") {
-                          return "Merci de renseigner votre email";
-                        }
-                        return null;
-                      },
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 40),
+                      child: Image(
+                          image: AssetImage("assets/logo_page_login.png")),
                     ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: const InputDecoration(
-                        labelText: "Mot de passe",
-                      ),
-                      validator: (value) {
-                        if (value == "") {
-                          return "Merci de renseigner votre mot de passe";
-                        }
-                        return null;
-                      },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomInput(
+                          label: "Email", controller: _emailController),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            logUser();
-                          }
-                        },
-                        child: const Text("Se connecter")),
-                    RichText(
-                      text: TextSpan(
-                        style: const TextStyle(color: Colors.black),
-                        children: <TextSpan>[
-                          const TextSpan(text: "Pas de compte ?"),
-                          TextSpan(
-                              text: " S'inscrire",
-                              style: const TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Register()));
-                                })
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomInput(
+                          label: "Mot de passe",
+                          controller: _passwordController),
+                    ),
+                    CustomElevatedButton(
+                        hasIcon: false,
+                        icon: const Icon(Icons.abc),
+                        text: "Se connecter",
+                        callback: validateForm),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(color: Colors.black),
+                          children: <TextSpan>[
+                            const TextSpan(text: "Pas de compte ?"),
+                            TextSpan(
+                                text: " S'inscrire",
+                                style: const TextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const Register()));
+                                  })
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -127,12 +118,24 @@ class _LoginState extends State<Login> {
         widget.storage.write(key: 'token', value: token);
         Navigator.pushReplacementNamed(context, '/');
       } else {
-        //TODO: afficher un message d'erreur
-        print("Erreur d'authentification");
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Email ou mot de passe incorrect")));
       }
     }).catchError((error) {
-      print(error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Une erreur est survenue")),
+      );
     });
-    ;
+  }
+
+  validateForm() {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Veuillez remplir les champs")));
+    } else {
+      logUser();
+    }
   }
 }
