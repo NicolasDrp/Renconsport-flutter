@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
@@ -17,9 +19,11 @@ class _RegisterState extends State<Register> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _townController = TextEditingController();
-  int intTest = 0;
+  String? selectedGender;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +55,29 @@ class _RegisterState extends State<Register> {
               CustomInput(
                   label: "Confirmation mot de passe",
                   controller: _passwordConfirmController),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: DropdownMenu<String>(
+                  inputDecorationTheme: const InputDecorationTheme(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange))),
+                  controller: _genderController,
+                  label: const Text("Genre"),
+                  dropdownMenuEntries: ["Homme", "Femme", "Autre"]
+                      .map((gender) => DropdownMenuEntry(
+                            value: gender,
+                            label: gender,
+                          ))
+                      .toList(),
+                  onSelected: (String? gender) {
+                    setState(() {
+                      selectedGender = gender;
+                    });
+                  },
+                ),
+              ),
               CustomInput(label: "Age", controller: _ageController),
               CustomInput(label: "Ville", controller: _townController),
               //TODO la checklist des cgu
@@ -74,6 +101,7 @@ class _RegisterState extends State<Register> {
         _emailConfirmController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _passwordConfirmController.text.isEmpty ||
+        selectedGender == null ||
         _ageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -146,25 +174,33 @@ class _RegisterState extends State<Register> {
       hasError = true;
       return;
     }
-    if (!hasError) {
-      print("sending");
+    if (hasError == false) {
       sendForm();
     }
   }
 
   void sendForm() {
+    print("sending");
     //TODO: fix le parse de l'age
-    http.post(
-      Uri.parse("http://192.168.43.181/register"),
-      body: {
-        "username": _usernameController.text,
-        "email": _emailController.text,
-        "password": _passwordController.text,
-        // "age": _ageController.text,
-        "town": _townController.text
-      },
-    ).then((response) {
-      if (response.statusCode == 200) {
+    http
+        .post(Uri.parse("$urlApi/users"),
+            headers: {
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+            body: json.encode({
+              "username": _usernameController.text,
+              "email": _emailController.text,
+              "password": _passwordController.text,
+              "age": int.parse(_ageController.text),
+              "city": _townController.text,
+              "gender": selectedGender,
+              "latitude": "0",
+              "longitude": "0",
+              "bio": "",
+            }))
+        .then((response) {
+      if (response.statusCode == 201) {
+        print("success");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Votre compte a bien été créé"),
@@ -172,6 +208,7 @@ class _RegisterState extends State<Register> {
         );
         Navigator.pop(context);
       } else {
+        print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Une erreur est survenue"),

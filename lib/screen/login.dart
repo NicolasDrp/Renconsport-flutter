@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/screen/Register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -79,7 +80,7 @@ class _LoginState extends State<Login> {
                         child: const Text("Se connecter")),
                     RichText(
                       text: TextSpan(
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                         children: <TextSpan>[
                           const TextSpan(text: "Pas de compte ?"),
                           TextSpan(
@@ -92,7 +93,8 @@ class _LoginState extends State<Login> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Register()));
+                                          builder: (context) =>
+                                              const Register()));
                                 })
                         ],
                       ),
@@ -111,7 +113,7 @@ class _LoginState extends State<Login> {
     String email = _emailController.text;
     String password = _passwordController.text;
     http
-        .post(Uri.parse("http://192.168.43.181:8000/api/login_check"),
+        .post(Uri.parse("$urlApi/login_check"),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
