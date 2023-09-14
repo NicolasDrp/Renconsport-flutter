@@ -23,13 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AppinioSwiperController controller = AppinioSwiperController();
   bool isLogged = true;
-  late Future<User> futureUser;
   @override
-  void initState() {
-    super.initState();
-    futureUser = fetchUser();
-  }
-
   Widget build(BuildContext context) {
     checkLogged();
     return Scaffold(
@@ -83,12 +77,18 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          Text("homepage"),
-          FutureBuilder<User>(
-            future: futureUser,
+          FutureBuilder<List<User>>(
+            future: fetchUser(),
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
-                return Text(snapshot.data!.email);
+                return Column(
+                  children: [
+                    Text(snapshot.data![1].username),
+                    Text((snapshot.data![1].age).toString()),
+                    Text(snapshot.data![1].city),
+                    Text(snapshot.data![1].bio)
+                  ],
+                );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }
@@ -130,25 +130,25 @@ class _HomePageState extends State<HomePage> {
     log("end reached!");
   }
 
-  Future<User> fetchUser() async {
+  Future<List<User>> fetchUser() async {
     String? token = await widget.storage.read(key: "token");
     if (token == null) {
       throw Exception(
           ("Token not found")); // Gérer le cas où le token n'est pas disponible
     }
-    final response = await http
-        .get(Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'), headers: {
-      HttpHeaders.authorizationHeader: token,
-    });
+    final response = await http.get(
+        Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'),
+        headers: {
+          HttpHeaders.authorizationHeader: token,
+        });
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      final responseJson = jsonDecode(response.body);
-      print(responseJson);
-      print(responseJson.data);
-      return User.fromJson(responseJson.data);
-      //return User.fromJson(jsonDecode(response.body));
+      final result = jsonDecode(response.body);
+      return List.generate(result['hydra:member'].length, (i) {
+        return User.fromJson(result['hydra:member'][i]);
+      });
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
