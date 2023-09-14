@@ -24,7 +24,11 @@ class _RegisterState extends State<Register> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _townController = TextEditingController();
   String? selectedGender;
+  String latitude = "";
+  String longitude = "";
   bool cguChecked = false;
+  List _townQueryResults = [];
+  bool showTowns = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +87,83 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               CustomInput(label: "Age", controller: _ageController),
-              CustomInput(label: "Ville", controller: _townController),
+              (showTowns == true)
+                  ? SizedBox(
+                      height: 160,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: (_townQueryResults.isNotEmpty
+                              ? _townQueryResults.map((town) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Card(
+                                      child: ListTile(
+                                        title: Text(town),
+                                        onTap: () {
+                                          setState(() {
+                                            _townController.text = town;
+                                            showTowns = false;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }).toList()
+                              : [
+                                  const Padding(
+                                    padding: EdgeInsets.only(bottom: 16),
+                                    child: ListTile(
+                                      title: Text("Aucun résultat"),
+                                    ),
+                                  )
+                                ]),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 0,
+                    ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: TextField(
+                  onChanged: (value) {
+                    http
+                        .get(Uri.parse(
+                            "https://api-adresse.data.gouv.fr/search/?q=$value&type=municipality"))
+                        .then((response) {
+                      setState(() {
+                        if (response.statusCode == 200) {
+                          setState(() {
+                            showTowns = true;
+                          });
+                          _townQueryResults = [];
+                          var townsJson = jsonDecode(response.body);
+                          for (var town in townsJson['features']) {
+                            _townQueryResults.add(town['properties']['name']);
+                          }
+                        } else {
+                          _townQueryResults = [];
+                          setState(() {
+                            showTowns = false;
+                          });
+                        }
+                      });
+                    });
+                  },
+                  controller: _townController,
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.orange)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.orange)),
+                    labelText: "Ville",
+                  ),
+                ),
+              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Checkbox(
                       value: cguChecked,
@@ -100,7 +178,7 @@ class _RegisterState extends State<Register> {
                       children: <TextSpan>[
                         const TextSpan(text: "J'accepte les"),
                         TextSpan(
-                            text: " Conditions Générales d'Utilisation",
+                            text: " Conditions d'Utilisation",
                             style: const TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline),
@@ -223,7 +301,7 @@ class _RegisterState extends State<Register> {
       return;
     }
     // Verifies that the town is selected
-    if (_townController.text.isEmpty) {
+    if (_townController.text.isEmpty || _townController.text.length < 3) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Veuillez sélectionner votre ville"),
@@ -244,6 +322,7 @@ class _RegisterState extends State<Register> {
       return;
     }
     if (hasError == false) {
+      getCoordinates();
       sendForm();
     }
   }
@@ -261,8 +340,8 @@ class _RegisterState extends State<Register> {
               "age": int.parse(_ageController.text),
               "city": _townController.text,
               "gender": selectedGender,
-              "latitude": "0",
-              "longitude": "0",
+              "latitude": latitude,
+              "longitude": longitude,
               "bio": "",
             }))
         .then((response) {
@@ -280,6 +359,25 @@ class _RegisterState extends State<Register> {
           ),
         );
       }
+    });
+  }
+
+  void getCoordinates() {
+    http
+        .get(Uri.parse(
+            "https://api-adresse.data.gouv.fr/search/?q=${_townController.text}&type=municipality&limit=1"))
+        .then((response) {
+      var townsJson = jsonDecode(response.body);
+      var lat =
+          townsJson['features'][0]['geometry']['coordinates'][1].toString();
+      var lon =
+          townsJson['features'][0]['geometry']['coordinates'][0].toString();
+      setState(() {
+        latitude = lat;
+      });
+      setState(() {
+        longitude = lon;
+      });
     });
   }
 }
