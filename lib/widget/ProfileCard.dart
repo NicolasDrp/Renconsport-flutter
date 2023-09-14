@@ -1,7 +1,7 @@
 import 'package:appinio_swiper/controllers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:renconsport_flutter/widgets/swapButton.dart';
+import 'package:renconsport_flutter/widget/swapButton.dart';
 
 import 'example_candidate_model.dart';
 

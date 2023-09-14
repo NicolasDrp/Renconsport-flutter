@@ -5,10 +5,10 @@ import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/modal/user.dart';
-import 'package:renconsport_flutter/widgets/ProfileCard.dart';
-import 'package:renconsport_flutter/widgets/example_candidate_model.dart';
+import 'package:renconsport_flutter/widget/ProfileCard.dart';
+import 'package:renconsport_flutter/widget/example_candidate_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:renconsport_flutter/widgets/bottomAppBar.dart';
+import 'package:renconsport_flutter/widget/bottomAppBar.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -23,11 +23,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AppinioSwiperController controller = AppinioSwiperController();
   bool isLogged = true;
+  int indexProfile = 0;
   @override
   Widget build(BuildContext context) {
     checkLogged();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         leading: Image.asset('assets/logo_appbar.png'),
         actions: [
           IconButton(
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * 0.55,
                   child: AppinioSwiper(
                     padding: EdgeInsets.all(0),
                     backgroundCardsCount: 0,
@@ -68,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                     cardsCount: candidates.length,
                     cardsBuilder: (BuildContext context, int index) {
                       return ProfileCard(
-                        candidate: candidates[index],
+                        candidate: candidates[indexProfile],
                         controller: controller,
                       );
                     },
@@ -83,10 +85,33 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.hasData && snapshot.data != null) {
                 return Column(
                   children: [
-                    Text(snapshot.data![1].username),
-                    // Text((snapshot.data![1].age).toString()),
-                    // Text(snapshot.data![1].city),
-                    // Text(snapshot.data![1].bio),
+                    Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Color(0xFFFB7819)),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  "${snapshot.data![indexProfile].username},${(snapshot.data![indexProfile].age).toString()}",
+                                  style: TextStyle(fontSize: 25)),
+                              Text(
+                                snapshot.data![indexProfile].city,
+                                style: TextStyle(fontSize: 18),
+                              )
+                            ],
+                          ),
+                          Text(
+                            snapshot.data![indexProfile].bio,
+                            style: TextStyle(fontSize: 16),
+                          )
+                        ]),
+                      ),
+                    ),
                     // snapshot.data![9].avatarUrl != null
                     //     ? Text((snapshot.data![9].avatarUrl).toString())
                     //     : Text("url de l'image")
@@ -100,20 +125,6 @@ class _HomePageState extends State<HomePage> {
               return const CircularProgressIndicator();
             },
           ),
-
-          //CArd
-
-          Card(
-            child: Column(children: [
-              Row(
-                children: [Text("Nomutilisateur"), Text("ville")],
-              ),
-              Text(
-                  "Je suis un grand sportif, je me prépare à une compétition de bodybuilding, si tu n’arrives pas à suivre .. NEXXT")
-            ]),
-          )
-
-          //fin card
         ],
       ),
     );
@@ -133,10 +144,21 @@ class _HomePageState extends State<HomePage> {
 
   void _swipe(int index, AppinioSwiperDirection direction) {
     log("the card was swiped to the: " + direction.name);
+    print(direction);
+    if (direction == AppinioSwiperDirection.left) {
+      print("swipe à gauche");
+    }
+    if (direction == AppinioSwiperDirection.left) {
+      print("swipe à droite");
+    }
+    setState(() {
+    indexProfile++;
+    });
   }
 
   void _unswipe(bool unswiped) {
     if (unswiped) {
+      print("unswap");
       log("SUCCESS: card was unswiped");
     } else {
       log("FAIL: no card left to unswipe");
