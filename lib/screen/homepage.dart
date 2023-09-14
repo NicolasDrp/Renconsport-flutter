@@ -84,9 +84,12 @@ class _HomePageState extends State<HomePage> {
                 return Column(
                   children: [
                     Text(snapshot.data![1].username),
-                    Text((snapshot.data![1].age).toString()),
-                    Text(snapshot.data![1].city),
-                    Text(snapshot.data![1].bio)
+                    // Text((snapshot.data![1].age).toString()),
+                    // Text(snapshot.data![1].city),
+                    // Text(snapshot.data![1].bio),
+                    // snapshot.data![9].avatarUrl != null
+                    //     ? Text((snapshot.data![9].avatarUrl).toString())
+                    //     : Text("url de l'image")
                   ],
                 );
               } else if (snapshot.hasError) {
@@ -96,7 +99,21 @@ class _HomePageState extends State<HomePage> {
               // By default, show a loading spinner.
               return const CircularProgressIndicator();
             },
+          ),
+
+          //CArd
+
+          Card(
+            child: Column(children: [
+              Row(
+                children: [Text("Nomutilisateur"), Text("ville")],
+              ),
+              Text(
+                  "Je suis un grand sportif, je me prépare à une compétition de bodybuilding, si tu n’arrives pas à suivre .. NEXXT")
+            ]),
           )
+
+          //fin card
         ],
       ),
     );
