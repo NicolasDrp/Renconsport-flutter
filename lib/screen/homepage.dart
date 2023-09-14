@@ -6,9 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/modal/user.dart';
 import 'package:renconsport_flutter/widget/ProfileCard.dart';
+import 'package:renconsport_flutter/widget/custom_app_bar.dart';
 import 'package:renconsport_flutter/widget/example_candidate_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:renconsport_flutter/widget/bottomAppBar.dart';
+import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -28,24 +29,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     checkLogged();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        leading: Image.asset('assets/logo_appbar.png'),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.error_outline,
-                color: Colors.black,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.settings_outlined,
-                color: Colors.black,
-              ))
-        ],
-      ),
+      //TODO: Rédiger le tutorial de la homepage
+      appBar: const CustomAppbar(tutorial: ""),
       bottomNavigationBar: BottomAppBarWidget(),
       body: Column(
         children: [
@@ -152,7 +137,7 @@ class _HomePageState extends State<HomePage> {
       print("swipe à droite");
     }
     setState(() {
-    indexProfile++;
+      indexProfile++;
     });
   }
 
