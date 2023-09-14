@@ -15,8 +15,23 @@ class BottomAppBarWidget extends StatelessWidget {
       unselectedItemColor: Colors.black,
       selectedFontSize: 0,
       unselectedFontSize: 0,
-      onTap: (value) {},
-      items: [
+      onTap: (value) {
+        switch (value) {
+          case 0:
+            Navigator.pushNamed(context, "/");
+            break;
+          case 1:
+            Navigator.pushNamed(context, "/sessions");
+            break;
+          case 2:
+            Navigator.pushNamed(context, "/contacts");
+            break;
+          case 3:
+            Navigator.pushNamed(context, "/profile");
+            break;
+        }
+      },
+      items: const [
         BottomNavigationBarItem(
           label: "Page d'accueil",
           icon: Icon(Icons.switch_account_outlined),
