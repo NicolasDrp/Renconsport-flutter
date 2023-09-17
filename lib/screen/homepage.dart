@@ -10,6 +10,7 @@ import 'package:renconsport_flutter/widget/custom_app_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.storage});
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                     Card(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Color(0xFFFB7819)),
+                          side: BorderSide(color: AdaptiveTheme.of(context).theme.primaryColor),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),

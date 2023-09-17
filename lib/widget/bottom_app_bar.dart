@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 
 class BottomAppBarWidget extends StatefulWidget {
@@ -16,9 +17,9 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
       showUnselectedLabels: false,
       iconSize: 34,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.blue,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.black,
+      backgroundColor: AdaptiveTheme.of(context).theme.hintColor,
+      selectedItemColor: AdaptiveTheme.of(context).theme.bottomNavigationBarTheme.selectedItemColor,
+      unselectedItemColor: AdaptiveTheme.of(context).theme.bottomNavigationBarTheme.unselectedItemColor,
       selectedFontSize: 0,
       unselectedFontSize: 0,
       currentIndex: _selectedIndex,
@@ -38,7 +39,6 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             Navigator.pushNamed(context, "/profile");
             break;
         }
-        
       },
       items: const [
         BottomNavigationBarItem(
