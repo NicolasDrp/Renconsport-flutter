@@ -64,7 +64,7 @@ class MainApp extends StatelessWidget {
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
             selectedItemColor: primary, unselectedItemColor: light),
       ),
-      debugShowFloatingThemeButton: true,
+      debugShowFloatingThemeButton: false,
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'RenconSport',
@@ -75,7 +75,7 @@ class MainApp extends StatelessWidget {
           '/login': (context) => Login(storage: storage),
           '/profile': (context) => Profile(storage: storage),
           '/sessions': (context) => Sessions(storage: storage),
-          '/parameters': (context) => Parameters(storage: storage),
+          '/parameters': (context) => Parameters(storage: storage,savedThemeMode: savedThemeMode),
           '/contacts': (context) => Contacts(storage: storage),
         },
       ),
