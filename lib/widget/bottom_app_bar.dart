@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
-class BottomAppBarWidget extends StatelessWidget {
+class BottomAppBarWidget extends StatefulWidget {
   const BottomAppBarWidget({super.key});
 
+  @override
+  State<BottomAppBarWidget> createState() => _BottomAppBarWidgetState();
+}
+
+class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -15,7 +21,9 @@ class BottomAppBarWidget extends StatelessWidget {
       unselectedItemColor: Colors.black,
       selectedFontSize: 0,
       unselectedFontSize: 0,
+      currentIndex: _selectedIndex,
       onTap: (value) {
+        _onItemTapped(value);
         switch (value) {
           case 0:
             Navigator.pushNamed(context, "/");
@@ -30,6 +38,7 @@ class BottomAppBarWidget extends StatelessWidget {
             Navigator.pushNamed(context, "/profile");
             break;
         }
+        
       },
       items: const [
         BottomNavigationBarItem(
@@ -50,5 +59,11 @@ class BottomAppBarWidget extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }

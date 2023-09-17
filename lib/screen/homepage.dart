@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/modal/user.dart';
 import 'package:renconsport_flutter/widget/ProfileCard.dart';
 import 'package:renconsport_flutter/widget/custom_app_bar.dart';
-import 'package:renconsport_flutter/widget/example_candidate_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   final AppinioSwiperController controller = AppinioSwiperController();
   bool isLogged = true;
   int indexProfile = 0;
+  Key _futureBuilderKey = UniqueKey();
   @override
   Widget build(BuildContext context) {
     checkLogged();
@@ -34,42 +34,42 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomAppBarWidget(),
       body: Column(
         children: [
-          CupertinoPageScaffold(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.55,
-                  child: AppinioSwiper(
-                    padding: EdgeInsets.all(0),
-                    backgroundCardsCount: 0,
-                    swipeOptions:
-                        const AppinioSwipeOptions.symmetric(horizontal: true),
-                    unlimitedUnswipe: true,
-                    controller: controller,
-                    unswipe: _unswipe,
-                    onSwiping: (AppinioSwiperDirection direction) {
-                      debugPrint(direction.toString());
-                    },
-                    onSwipe: _swipe,
-                    onEnd: _onEnd,
-                    cardsCount: candidates.length,
-                    cardsBuilder: (BuildContext context, int index) {
-                      return ProfileCard(
-                        candidate: candidates[indexProfile],
-                        controller: controller,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
           FutureBuilder<List<User>>(
+            key: _futureBuilderKey,
             future: fetchUser(),
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
                 return Column(
                   children: [
+                    CupertinoPageScaffold(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.55,
+                            child: AppinioSwiper(
+                              padding: EdgeInsets.all(0),
+                              backgroundCardsCount: 0,
+                              swipeOptions: const AppinioSwipeOptions.symmetric(
+                                  horizontal: true),
+                              unlimitedUnswipe: false,
+                              controller: controller,
+                              onSwiping: (AppinioSwiperDirection direction) {
+                                debugPrint(direction.toString());
+                              },
+                              onSwipe: _swipe,
+                              onEnd: _onEnd,
+                              cardsCount: snapshot.data!.length,
+                              cardsBuilder: (BuildContext context, int index) {
+                                return ProfileCard(
+                                  candidate: snapshot.data![indexProfile],
+                                  controller: controller,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Card(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -141,17 +141,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _unswipe(bool unswiped) {
-    if (unswiped) {
-      print("unswap");
-      log("SUCCESS: card was unswiped");
-    } else {
-      log("FAIL: no card left to unswipe");
-    }
-  }
-
   void _onEnd() {
-    log("end reached!");
+    setState(() {
+      indexProfile = 0;
+      _futureBuilderKey = UniqueKey();
+    });
   }
 
   Future<List<User>> fetchUser() async {
