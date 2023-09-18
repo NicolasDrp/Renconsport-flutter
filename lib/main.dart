@@ -4,6 +4,7 @@ import 'package:renconsport_flutter/screen/homepage.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:renconsport_flutter/screen/parameters.dart';
 import 'package:renconsport_flutter/screen/profile.dart';
+import 'package:renconsport_flutter/screen/profile_settings.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
 import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:renconsport_flutter/widget/custom_app_bar.dart';
@@ -39,7 +40,7 @@ class _MainAppState extends State<MainApp> {
       });
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     AdaptiveThemeMode? savedThemeMode = getUserTheme();
@@ -55,6 +56,11 @@ class _MainAppState extends State<MainApp> {
         primaryColor: primary,
         hintColor: secondaryLight,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        cardColor: primary,
+        textTheme: TextTheme(
+            bodyMedium: TextStyle(color: Color(0xFF1F1D1D), fontSize: 20),
+            bodyLarge: TextStyle(color: Color(0xFF1F1D1D), fontSize: 24)),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
             selectedItemColor: light, unselectedItemColor: dark),
       ),
       dark: ThemeData(
@@ -63,6 +69,11 @@ class _MainAppState extends State<MainApp> {
         primaryColor: primary,
         hintColor: secondaryDark,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        cardColor: dark,
+        textTheme: TextTheme(
+            bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
+            bodyLarge: TextStyle(color: Color(0xFFFAFAFA), fontSize: 24)),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
             selectedItemColor: primary, unselectedItemColor: light),
       ),
       initial: savedThemeMode ?? AdaptiveThemeMode.system,
