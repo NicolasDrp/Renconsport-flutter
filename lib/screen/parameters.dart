@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
-import 'package:renconsport_flutter/widget/custom_app_bar.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 class Parameters extends StatefulWidget {
-  const Parameters({super.key, required this.storage, this.savedThemeMode});
-
-  final FlutterSecureStorage storage;
-  final AdaptiveThemeMode? savedThemeMode;
+  const Parameters({super.key});
 
   @override
   State<Parameters> createState() => _ParametersState();
@@ -17,10 +11,7 @@ class Parameters extends StatefulWidget {
 class _ParametersState extends State<Parameters> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppbar(tutorial: ""),
-      bottomNavigationBar: const BottomAppBarWidget(),
-      body: ListView(
+    return ListView(
         children: [
           ListTile(
             title: const Center(
@@ -161,7 +152,6 @@ class _ParametersState extends State<Parameters> {
                 ),
               )),
         ],
-      ),
     );
   }
 }

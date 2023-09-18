@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Contacts extends StatefulWidget {
-  const Contacts({super.key, required this.storage});
-
-  final FlutterSecureStorage storage;
+  const Contacts({super.key});
 
   @override
   State<Contacts> createState() => _ContactsState();

@@ -2,9 +2,11 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppbar({super.key, required this.tutorial});
+  const CustomAppbar(
+      {super.key, required this.tutorial, required this.callback});
 
   final String tutorial;
+  final Function callback;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             )),
         IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, "/parameters");
+              callback(4);
             },
             icon: const Icon(
               Icons.settings_outlined,

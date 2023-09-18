@@ -1,27 +1,23 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/modal/user.dart';
-import 'package:renconsport_flutter/widget/ProfileCard.dart';
-import 'package:renconsport_flutter/widget/custom_app_bar.dart';
+import 'package:renconsport_flutter/widget/profile_card.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:renconsport_flutter/screen/login.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.storage});
-
-  final FlutterSecureStorage storage;
-
+  const HomePage({super.key});
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
   final AppinioSwiperController controller = AppinioSwiperController();
   bool isLogged = true;
   int indexProfile = 0;
@@ -29,114 +25,106 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     checkLogged();
-    return Scaffold(
-      //TODO: Rédiger le tutorial de la homepage
-      appBar: const CustomAppbar(tutorial: ""),
-      bottomNavigationBar: BottomAppBarWidget(),
-      body: Column(
-        children: [
-          FutureBuilder<List<User>>(
-            key: _futureBuilderKey,
-            future: fetchUser(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data != null) {
-                return Column(
-                  children: [
-                    CupertinoPageScaffold(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.55,
-                            child: AppinioSwiper(
-                              padding: EdgeInsets.all(0),
-                              backgroundCardsCount: 0,
-                              swipeOptions: const AppinioSwipeOptions.symmetric(
-                                  horizontal: true),
-                              unlimitedUnswipe: false,
-                              controller: controller,
-                              onSwiping: (AppinioSwiperDirection direction) {
-                                debugPrint(direction.toString());
-                              },
-                              onSwipe: _swipe,
-                              onEnd: _onEnd,
-                              cardsCount: snapshot.data!.length,
-                              cardsBuilder: (BuildContext context, int index) {
-                                return ProfileCard(
-                                  candidate: snapshot.data![indexProfile],
-                                  controller: controller,
-                                );
-                              },
-                            ),
+    return Column(
+      children: [
+        FutureBuilder<List<User>>(
+          key: _futureBuilderKey,
+          future: fetchUser(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data != null) {
+              return Column(
+                children: [
+                  FloatingActionButton(onPressed: () {
+                    storage.delete(key: "token");
+                    redirect();
+                  }),
+                  CupertinoPageScaffold(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.55,
+                          child: AppinioSwiper(
+                            padding: const EdgeInsets.all(0),
+                            backgroundCardsCount: 0,
+                            swipeOptions: const AppinioSwipeOptions.symmetric(
+                                horizontal: true),
+                            unlimitedUnswipe: false,
+                            controller: controller,
+                            onSwiping: (AppinioSwiperDirection direction) {
+                              debugPrint(direction.toString());
+                            },
+                            onSwipe: _swipe,
+                            onEnd: _onEnd,
+                            cardsCount: snapshot.data!.length,
+                            cardsBuilder: (BuildContext context, int index) {
+                              return ProfileCard(
+                                candidate: snapshot.data![indexProfile],
+                                controller: controller,
+                              );
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    Card(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: AdaptiveTheme.of(context).theme.primaryColor),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  "${snapshot.data![indexProfile].username},${(snapshot.data![indexProfile].age).toString()}",
-                                  style: TextStyle(fontSize: 25)),
-                              Text(
-                                snapshot.data![indexProfile].city,
-                                style: TextStyle(fontSize: 18),
-                              )
-                            ],
-                          ),
-                          Text(
-                            snapshot.data![indexProfile].bio,
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ]),
-                      ),
+                  ),
+                  Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color:
+                                AdaptiveTheme.of(context).theme.primaryColor),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                "${snapshot.data![indexProfile].username},${(snapshot.data![indexProfile].age).toString()}",
+                                style: const TextStyle(fontSize: 25)),
+                            Text(
+                              snapshot.data![indexProfile].city,
+                              style: const TextStyle(fontSize: 18),
+                            )
+                          ],
+                        ),
+                        Text(
+                          snapshot.data![indexProfile].bio,
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      ]),
                     ),
-                    // snapshot.data![9].avatarUrl != null
-                    //     ? Text((snapshot.data![9].avatarUrl).toString())
-                    //     : Text("url de l'image")
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            },
-          ),
-        ],
-      ),
+                  ),
+                  // snapshot.data![9].avatarUrl != null
+                  //     ? Text((snapshot.data![9].avatarUrl).toString())
+                  //     : Text("url de l'image")
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          },
+        ),
+      ],
     );
   }
 
   void checkLogged() async {
-    if (!await widget.storage.containsKey(key: "token")) {
+    if (!await storage.containsKey(key: "token")) {
       redirect();
-    } else {
-      print(await widget.storage.read(key: "token"));
     }
   }
 
   void redirect() {
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const Login()));
   }
 
   void _swipe(int index, AppinioSwiperDirection direction) {
-    log("the card was swiped to the: " + direction.name);
-    print(direction);
-    if (direction == AppinioSwiperDirection.left) {
-      print("swipe à gauche");
-    }
-    if (direction == AppinioSwiperDirection.left) {
-      print("swipe à droite");
-    }
     setState(() {
       indexProfile++;
     });
@@ -150,7 +138,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<User>> fetchUser() async {
-    String? token = await widget.storage.read(key: "token");
+    String? token = await storage.read(key: "token");
     if (token == null) {
       throw Exception(
           ("Token not found")); // Gérer le cas où le token n'est pas disponible
