@@ -34,10 +34,6 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData && snapshot.data != null) {
               return Column(
                 children: [
-                  FloatingActionButton(onPressed: () {
-                    storage.delete(key: "token");
-                    redirect();
-                  }),
                   CupertinoPageScaffold(
                     child: Column(
                       children: [
