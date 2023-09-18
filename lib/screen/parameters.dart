@@ -24,111 +24,144 @@ class _ParametersState extends State<Parameters> {
         children: [
           ListTile(
             title: const Center(
-              child: Text(
-                'Paramètres du compte',
-                style: TextStyle(
-                  color: Color(0xFFFAFAFA),
+              child: Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  'Paramètres du compte',
+                  style: TextStyle(
+                      color: Color(0xFFFAFAFA),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w500),
                 ),
               ),
             ),
-            tileColor: AdaptiveTheme.of(context).theme.primaryColor,
+            tileColor: AdaptiveTheme.of(context).theme.cardColor,
           ),
-          const ListTile(
+          ListTile(
             title: Center(
-              child: Text(
-                'Modifier mes informations',
-                style: TextStyle(
-                  color: Color(0xFF1F1D1D),
-                ),
-              ),
-            ),
-          ),
-          const ListTile(
-            title: Center(
-              child: Text(
-                'Désactiver mon compte',
-                style: TextStyle(
-                  color: Color(0xFF1F1D1D),
-                ),
-              ),
-            ),
-          ),
-          const ListTile(
-            title: Center(
-              child: Text(
-                'Options de confidentialité',
-                style: TextStyle(
-                  color: Color(0xFF1F1D1D),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  'Modifier mes informations',
+                  style: AdaptiveTheme.of(context).theme.textTheme.bodyMedium,
                 ),
               ),
             ),
           ),
           ListTile(
+            title: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text('Désactiver mon compte',
+                    style:
+                        AdaptiveTheme.of(context).theme.textTheme.bodyMedium),
+              ),
+            ),
+          ),
+          ListTile(
+            title: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text('Options de confidentialité',
+                    style:
+                        AdaptiveTheme.of(context).theme.textTheme.bodyMedium),
+              ),
+            ),
+          ),
+          ListTile(
             title: const Center(
-              child: Text(
-                "Paramètres de l'appli",
-                style: TextStyle(
-                  color: Color(0xFFFAFAFA),
+              child: Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  "Paramètres de l'appli",
+                  style: TextStyle(
+                      color: Color(0xFFFAFAFA),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w500),
                 ),
               ),
             ),
-            tileColor: AdaptiveTheme.of(context).theme.primaryColor,
+            tileColor: AdaptiveTheme.of(context).theme.cardColor,
           ),
-          const ListTile(
+          ListTile(
             title: Center(
-              child: Text(
-                'Conditions générales',
-                style: TextStyle(
-                  color: Color(0xFF1F1D1D),
+              child: GestureDetector(
+                onTap: () {
+                  AdaptiveTheme.of(context).toggleThemeMode();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Thème actuel : ',
+                      style:
+                          AdaptiveTheme.of(context).theme.textTheme.bodyMedium,
+                    ),
+                    Text(
+                        AdaptiveTheme.of(context).mode.isDark
+                            ? 'Sombre'
+                            : AdaptiveTheme.of(context).mode.isLight
+                                ? 'Clair'
+                                : 'Systeme',
+                        style: AdaptiveTheme.of(context)
+                            .theme
+                            .textTheme
+                            .bodyMedium),
+                  ],
                 ),
               ),
             ),
           ),
-          const ListTile(
+          ListTile(
             title: Center(
-              child: Text(
-                'Politique de confidentialité',
-                style: TextStyle(
-                  color: Color(0xFF1F1D1D),
-                ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text('Conditions générales',
+                    style:
+                        AdaptiveTheme.of(context).theme.textTheme.bodyMedium),
               ),
             ),
           ),
-          const ListTile(
+          ListTile(
             title: Center(
-              child: Text(
-                'A propos',
-                style: TextStyle(
-                  color: Color(0xFF1F1D1D),
-                ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text('Politique de confidentialité',
+                    style:
+                        AdaptiveTheme.of(context).theme.textTheme.bodyMedium),
+              ),
+            ),
+          ),
+          ListTile(
+            title: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text('A propos',
+                    style:
+                        AdaptiveTheme.of(context).theme.textTheme.bodyMedium),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.20),
-            child: FloatingActionButton.extended(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.20,
+                  vertical: MediaQuery.of(context).size.width * 0.05),
+              child: ElevatedButton.icon(
+                style: ButtonStyle(
+                    elevation: MaterialStateProperty.all<double?>(5),
+                    backgroundColor: MaterialStatePropertyAll<Color>(
+                        AdaptiveTheme.of(context).theme.primaryColor),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.all(20))),
                 onPressed: () {},
-                icon: Icon(Icons.logout,color: Colors.white),
-                label: const Text("Déconnexion",style: TextStyle(color: Colors.white),),
-                backgroundColor: AdaptiveTheme.of(context).theme.primaryColor),
-          ),
+                icon: const Icon(Icons.logout, color: Colors.white, size: 30),
+                label: const Text(
+                  "Déconnexion",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              )),
         ],
       ),
     );
-  }
-
-  void changeTheme() {
-//     // sets theme mode to dark
-// AdaptiveTheme.of(context).setDark();
-
-// // sets theme mode to light
-// AdaptiveTheme.of(context).setLight();
-
-// // sets theme mode to system default
-// AdaptiveTheme.of(context).setSystem();
-    AdaptiveTheme.of(context).toggleThemeMode();
-    AdaptiveTheme.getThemeMode().then((themeMode) {
-      print(themeMode?.toString());
-    });
   }
 }

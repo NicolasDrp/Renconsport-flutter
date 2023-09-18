@@ -5,6 +5,7 @@ import 'package:renconsport_flutter/screen/homepage.dart';
 import 'package:renconsport_flutter/screen/login.dart';
 import 'package:renconsport_flutter/screen/parameters.dart';
 import 'package:renconsport_flutter/screen/profile.dart';
+import 'package:renconsport_flutter/screen/profile_settings.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
@@ -24,22 +25,6 @@ class MainApp extends StatelessWidget {
   const MainApp(
       {required this.storage, super.key, required this.savedThemeMode});
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     theme: ThemeData(
-  //       useMaterial3: true,
-  //     ),
-  //     routes: {
-  //       '/': (context) => HomePage(storage: storage),
-  //       '/login': (context) => Login(storage: storage),
-  //       '/profile': (context) => Profile(storage: storage),
-  //       '/sessions': (context) => Sessions(storage: storage),
-  //       '/parameters': (context) => Parameters(storage: storage),
-  //       '/contacts': (context) => Contacts(storage: storage),
-  //     },
-  //   );
-
   @override
   Widget build(BuildContext context) {
     const Color primary = Color(0xFFFB7819);
@@ -53,6 +38,10 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: primary,
         hintColor: secondaryLight,
+        cardColor: primary,
+        textTheme: TextTheme(
+            bodyMedium: TextStyle(color: Color(0xFF1F1D1D), fontSize: 20),
+            bodyLarge: TextStyle(color: Color(0xFF1F1D1D), fontSize: 24)),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
             selectedItemColor: light, unselectedItemColor: dark),
       ),
@@ -61,10 +50,14 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: primary,
         hintColor: secondaryDark,
+        cardColor: dark,
+        textTheme: TextTheme(
+            bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
+            bodyLarge: TextStyle(color: Color(0xFFFAFAFA), fontSize: 24)),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
             selectedItemColor: primary, unselectedItemColor: light),
       ),
-      debugShowFloatingThemeButton: false,
+      debugShowFloatingThemeButton: true,
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'RenconSport',
@@ -75,8 +68,10 @@ class MainApp extends StatelessWidget {
           '/login': (context) => Login(storage: storage),
           '/profile': (context) => Profile(storage: storage),
           '/sessions': (context) => Sessions(storage: storage),
-          '/parameters': (context) => Parameters(storage: storage,savedThemeMode: savedThemeMode),
+          '/parameters': (context) =>
+              Parameters(storage: storage, savedThemeMode: savedThemeMode),
           '/contacts': (context) => Contacts(storage: storage),
+          '/profile_settings': (context) => ProfileSettings(storage: storage),
         },
       ),
     );
