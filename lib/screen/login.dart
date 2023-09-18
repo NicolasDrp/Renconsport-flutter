@@ -1,17 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/screen/Register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key, required this.storage});
-
-  final FlutterSecureStorage storage;
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -20,6 +18,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +111,7 @@ class _LoginState extends State<Login> {
         .then((response) {
       if (response.statusCode == 200) {
         String token = json.decode(response.body)['token'];
-        widget.storage.write(key: 'token', value: token);
+        storage.write(key: 'token', value: token);
         Navigator.pushReplacementNamed(context, '/');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

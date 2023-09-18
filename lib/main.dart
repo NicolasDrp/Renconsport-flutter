@@ -1,47 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/screen/contacts.dart';
 import 'package:renconsport_flutter/screen/homepage.dart';
-import 'package:renconsport_flutter/screen/login.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:renconsport_flutter/screen/parameters.dart';
 import 'package:renconsport_flutter/screen/profile.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
-import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
+import 'package:renconsport_flutter/widget/custom_app_bar.dart';
 
 const String urlApi = "https://renconsport-api.osc-fr1.scalingo.io/api";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterSecureStorage storage = const FlutterSecureStorage();
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-  runApp(MainApp(storage: storage, savedThemeMode: savedThemeMode));
+  runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
-  final FlutterSecureStorage storage;
-  final AdaptiveThemeMode? savedThemeMode;
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
 
-  const MainApp(
-      {required this.storage, super.key, required this.savedThemeMode});
+class _MainAppState extends State<MainApp> {
+  final List<Widget> pageList = [
+    const HomePage(),
+    const Sessions(),
+    const Contacts(),
+    const Profile(),
+    const Parameters()
+  ];
+  int pageIndex = 0;
+  String currentTutorial = "placeholder"; // TODO: implement tutorial
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return MaterialApp(
-  //     theme: ThemeData(
-  //       useMaterial3: true,
-  //     ),
-  //     routes: {
-  //       '/': (context) => HomePage(storage: storage),
-  //       '/login': (context) => Login(storage: storage),
-  //       '/profile': (context) => Profile(storage: storage),
-  //       '/sessions': (context) => Sessions(storage: storage),
-  //       '/parameters': (context) => Parameters(storage: storage),
-  //       '/contacts': (context) => Contacts(storage: storage),
-  //     },
-  //   );
+  void navigateToPage(int index) {
+    if (index != pageIndex) {
+      setState(() {
+        pageIndex = index;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    AdaptiveThemeMode? savedThemeMode = getUserTheme();
     const Color primary = Color(0xFFFB7819);
     const Color secondaryLight = Color(0xFF1482C2);
     const Color secondaryDark = Color(0xFF004989);
@@ -53,7 +54,7 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: primary,
         hintColor: secondaryLight,
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: light, unselectedItemColor: dark),
       ),
       dark: ThemeData(
@@ -61,24 +62,34 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: primary,
         hintColor: secondaryDark,
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: primary, unselectedItemColor: light),
       ),
-      debugShowFloatingThemeButton: true,
-      initial: savedThemeMode ?? AdaptiveThemeMode.light,
+      initial: savedThemeMode ?? AdaptiveThemeMode.system,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'RenconSport',
+        debugShowCheckedModeBanner: false,
         theme: theme,
         darkTheme: darkTheme,
-        routes: {
-          '/': (context) => HomePage(storage: storage),
-          '/login': (context) => Login(storage: storage),
-          '/profile': (context) => Profile(storage: storage),
-          '/sessions': (context) => Sessions(storage: storage),
-          '/parameters': (context) => Parameters(storage: storage),
-          '/contacts': (context) => Contacts(storage: storage),
-        },
+        home: Scaffold(
+            appBar: CustomAppbar(
+              tutorial: currentTutorial,
+              callback: navigateToPage,
+            ),
+            body: pageList[pageIndex],
+            bottomNavigationBar: BottomAppBarWidget(
+              callback: navigateToPage,
+              currentPage: pageIndex,
+            )),
       ),
     );
+  }
+
+  AdaptiveThemeMode? getUserTheme() {
+    var theme;
+    AdaptiveTheme.getThemeMode().then((themeMode) {
+      theme = themeMode;
+    });
+    return theme;
   }
 }

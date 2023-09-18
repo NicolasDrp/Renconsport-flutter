@@ -1,10 +1,7 @@
 import 'package:appinio_swiper/controllers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/modal/user.dart';
-import 'package:renconsport_flutter/widget/swapButton.dart';
-
-import 'example_candidate_model.dart';
+import 'package:renconsport_flutter/widget/swap_button.dart';
 
 class ProfileCard extends StatelessWidget {
   final User candidate;
@@ -35,7 +32,7 @@ class ProfileCard extends StatelessWidget {
         children: [
           Flexible(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
                     image: AssetImage("assets/placeholder_avatar.png")),
