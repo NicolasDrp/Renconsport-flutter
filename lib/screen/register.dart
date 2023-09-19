@@ -132,7 +132,7 @@ class _RegisterState extends State<Register> {
   }
 
 
-  validateForm() {
+  void validateForm() {
     bool hasError = false;
     // Verifies that no field is empty
     if (_usernameController.text.isEmpty ||

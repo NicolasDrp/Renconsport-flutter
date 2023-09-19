@@ -182,7 +182,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
   }
 
-  validateModificationForm() {
+  void validateModificationForm() {
     bool hasError = false;
     // Verifies that no field is empty
     if (_usernameController.text.isEmpty ||
@@ -308,7 +308,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     });
   }
 
-  validatePasswordForm() {
+  void validatePasswordForm() {
     bool hasError = false;
     if (_oldPasswordController.text.isEmpty ||
         _passwordController.text.isEmpty ||

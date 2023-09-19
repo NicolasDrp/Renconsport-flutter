@@ -1,3 +1,4 @@
 {
-    "cSpell.words": ["cupertino", "swiper", "unswipe", "Unswipe"]
+    "cSpell.words": ["cupertino", "swiper", "unswipe", "Unswipe"],
+    "git.ignoreLimitWarning": true
 }
