@@ -2,15 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/main.dart';
-import 'package:renconsport_flutter/screen/Register.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
-
+  const Login({super.key, required this.nav});
+  final Function(int index) nav;
   @override
   State<Login> createState() => _LoginState();
 }
@@ -22,9 +21,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/background_login.png"),
@@ -76,11 +75,7 @@ class _LoginState extends State<Login> {
                                     decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const Register()));
+                                    widget.nav(6);
                                   })
                           ],
                         ),
@@ -112,7 +107,7 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         String token = json.decode(response.body)['token'];
         storage.write(key: 'token', value: token);
-        Navigator.pushReplacementNamed(context, '/');
+        widget.nav(0);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Email ou mot de passe incorrect")));

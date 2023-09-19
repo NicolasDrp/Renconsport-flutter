@@ -7,7 +7,9 @@ import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  const Register({super.key, required this.nav});
+
+  final Function nav;
 
   @override
   State<Register> createState() => _RegisterState();
@@ -32,178 +34,169 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xffFAFAFA),
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: FloatingActionButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          elevation: 0,
-          backgroundColor: Colors.white,
-          child: const Icon(Icons.keyboard_arrow_left),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            children: [
-              CustomInput(
-                  label: "Nom d'utilisateur", controller: _usernameController),
-              CustomInput(label: "Email", controller: _emailController),
-              CustomInput(
-                  label: "Confirmation Email",
-                  controller: _emailConfirmController),
-              CustomInput(
-                  label: "Mot de passe", controller: _passwordController),
-              CustomInput(
-                  label: "Confirmation mot de passe",
-                  controller: _passwordConfirmController),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: DropdownMenu<String>(
-                  width: MediaQuery.of(context).size.width - 40,
-                  inputDecorationTheme: const InputDecorationTheme(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orange)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orange))),
-                  controller: _genderController,
-                  label: const Text("Genre"),
-                  dropdownMenuEntries: ["Homme", "Femme", "Autre"]
-                      .map((gender) => DropdownMenuEntry(
-                            value: gender,
-                            label: gender,
-                          ))
-                      .toList(),
-                  onSelected: (String? gender) {
-                    setState(() {
-                      selectedGender = gender;
-                    });
-                  },
-                ),
-              ),
-              CustomInput(label: "Age", controller: _ageController),
-              (showTowns == true)
-                  ? SizedBox(
-                      height: 160,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: (_townQueryResults.isNotEmpty
-                              ? _townQueryResults.map((town) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 16),
-                                    child: Card(
-                                      child: ListTile(
-                                        title: Text(town),
-                                        onTap: () {
-                                          setState(() {
-                                            _townController.text = town;
-                                            showTowns = false;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }).toList()
-                              : [
-                                  const Padding(
-                                    padding: EdgeInsets.only(bottom: 16),
-                                    child: ListTile(
-                                      title: Text("Aucun résultat"),
-                                    ),
-                                  )
-                                ]),
-                        ),
-                      ),
-                    )
-                  : const SizedBox(
-                      height: 0,
-                    ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: TextField(
-                  onChanged: (value) {
-                    http
-                        .get(Uri.parse(
-                            "https://api-adresse.data.gouv.fr/search/?q=$value&type=municipality"))
-                        .then((response) {
-                      setState(() {
-                        if (response.statusCode == 200) {
-                          setState(() {
-                            showTowns = true;
-                          });
-                          _townQueryResults = [];
-                          var townsJson = jsonDecode(response.body);
-                          for (var town in townsJson['features']) {
-                            _townQueryResults.add(town['properties']['name']);
-                          }
-                        } else {
-                          _townQueryResults = [];
-                          setState(() {
-                            showTowns = false;
-                          });
-                        }
-                      });
-                    });
-                  },
-                  controller: _townController,
-                  decoration: const InputDecoration(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          children: [
+            SizedBox(
+                height: 80,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      widget.nav(5);
+                    },
+                  ),
+                )),
+            CustomInput(
+                label: "Nom d'utilisateur", controller: _usernameController),
+            CustomInput(label: "Email", controller: _emailController),
+            CustomInput(
+                label: "Confirmation Email",
+                controller: _emailConfirmController),
+            CustomInput(label: "Mot de passe", controller: _passwordController),
+            CustomInput(
+                label: "Confirmation mot de passe",
+                controller: _passwordConfirmController),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: DropdownMenu<String>(
+                width: MediaQuery.of(context).size.width - 40,
+                inputDecorationTheme: const InputDecorationTheme(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.orange)),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.orange)),
-                    labelText: "Ville",
+                        borderSide: BorderSide(color: Colors.orange))),
+                controller: _genderController,
+                label: const Text("Genre"),
+                dropdownMenuEntries: ["Homme", "Femme", "Autre"]
+                    .map((gender) => DropdownMenuEntry(
+                          value: gender,
+                          label: gender,
+                        ))
+                    .toList(),
+                onSelected: (String? gender) {
+                  setState(() {
+                    selectedGender = gender;
+                  });
+                },
+              ),
+            ),
+            CustomInput(label: "Age", controller: _ageController),
+            (showTowns == true)
+                ? SizedBox(
+                    height: 160,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: (_townQueryResults.isNotEmpty
+                            ? _townQueryResults.map((town) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Text(town),
+                                      onTap: () {
+                                        setState(() {
+                                          _townController.text = town;
+                                          showTowns = false;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }).toList()
+                            : [
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 16),
+                                  child: ListTile(
+                                    title: Text("Aucun résultat"),
+                                  ),
+                                )
+                              ]),
+                      ),
+                    ),
+                  )
+                : const SizedBox(
+                    height: 0,
                   ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: TextField(
+                onChanged: (value) {
+                  http
+                      .get(Uri.parse(
+                          "https://api-adresse.data.gouv.fr/search/?q=$value&type=municipality"))
+                      .then((response) {
+                    setState(() {
+                      if (response.statusCode == 200) {
+                        setState(() {
+                          showTowns = true;
+                        });
+                        _townQueryResults = [];
+                        var townsJson = jsonDecode(response.body);
+                        for (var town in townsJson['features']) {
+                          _townQueryResults.add(town['properties']['name']);
+                        }
+                      } else {
+                        _townQueryResults = [];
+                        setState(() {
+                          showTowns = false;
+                        });
+                      }
+                    });
+                  });
+                },
+                controller: _townController,
+                decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.orange)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.orange)),
+                  labelText: "Ville",
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                      value: cguChecked,
-                      onChanged: ((value) {
-                        setState(() {
-                          cguChecked = value!;
-                        });
-                      })),
-                  RichText(
-                    text: TextSpan(
-                      style: const TextStyle(color: Colors.black),
-                      children: <TextSpan>[
-                        const TextSpan(text: "J'accepte les"),
-                        TextSpan(
-                            text: " Conditions d'Utilisation",
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              // TODO remplacer le lien vers les CGU
-                              ..onTap = () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Register()));
-                              })
-                      ],
-                    ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Checkbox(
+                    value: cguChecked,
+                    onChanged: ((value) {
+                      setState(() {
+                        cguChecked = value!;
+                      });
+                    })),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(color: Colors.black),
+                    children: <TextSpan>[
+                      const TextSpan(text: "J'accepte les"),
+                      TextSpan(
+                          text: " Conditions d'Utilisation",
+                          style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            // TODO remplacer le lien vers les CGU
+                            ..onTap = () {
+                              widget.nav(6);
+                            })
+                    ],
                   ),
-                ],
-              ),
-              // TODO: sports pratiqués
-              CustomElevatedButton(
-                  hasIcon: false,
-                  icon: const Icon(Icons.abc),
-                  text: "S'enregistrer",
-                  callback: validateForm)
-            ],
-          ),
+                ),
+              ],
+            ),
+            // TODO: sports pratiqués
+            CustomElevatedButton(
+                hasIcon: false,
+                icon: const Icon(Icons.abc),
+                text: "S'enregistrer",
+                callback: validateForm)
+          ],
         ),
       ),
     );
@@ -351,7 +344,7 @@ class _RegisterState extends State<Register> {
             content: Text("Votre compte a bien été créé"),
           ),
         );
-        Navigator.pop(context);
+        widget.nav(5);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
