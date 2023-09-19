@@ -12,6 +12,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:renconsport_flutter/widget/city_input.dart';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
+import 'package:renconsport_flutter/widget/custom_back_button.dart';
 
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({super.key, required this.nav});
