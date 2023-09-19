@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:http/http.dart' as http;
 import 'package:renconsport_flutter/main.dart';
+import 'package:renconsport_flutter/widget/city_input.dart';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
@@ -29,8 +31,6 @@ class _RegisterState extends State<Register> {
   String latitude = "";
   String longitude = "";
   bool cguChecked = false;
-  List _townQueryResults = [];
-  bool showTowns = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +51,28 @@ class _RegisterState extends State<Register> {
                   ),
                 )),
             CustomInput(
-                label: "Nom d'utilisateur", controller: _usernameController),
-            CustomInput(label: "Email", controller: _emailController),
+              label: "Nom d'utilisateur",
+              controller: _usernameController,
+              isPassword: false,
+            ),
             CustomInput(
-                label: "Confirmation Email",
-                controller: _emailConfirmController),
-            CustomInput(label: "Mot de passe", controller: _passwordController),
+              label: "Email",
+              controller: _emailController,
+              isPassword: false,
+            ),
+            CustomInput(
+              label: "Confirmation Email",
+              controller: _emailConfirmController,
+              isPassword: false,
+            ),
+            CustomInput(
+                label: "Mot de passe",
+                controller: _passwordController,
+                isPassword: true),
             CustomInput(
                 label: "Confirmation mot de passe",
-                controller: _passwordConfirmController),
+                controller: _passwordConfirmController,
+                isPassword: true),
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: DropdownMenu<String>(
@@ -78,88 +91,13 @@ class _RegisterState extends State<Register> {
                         ))
                     .toList(),
                 onSelected: (String? gender) {
-                  setState(() {
-                    selectedGender = gender;
-                  });
+                  selectedGender = gender;
                 },
               ),
             ),
-            CustomInput(label: "Age", controller: _ageController),
-            (showTowns == true)
-                ? SizedBox(
-                    height: 160,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: (_townQueryResults.isNotEmpty
-                            ? _townQueryResults.map((town) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Card(
-                                    child: ListTile(
-                                      title: Text(town),
-                                      onTap: () {
-                                        setState(() {
-                                          _townController.text = town;
-                                          showTowns = false;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }).toList()
-                            : [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 16),
-                                  child: ListTile(
-                                    title: Text("Aucun résultat"),
-                                  ),
-                                )
-                              ]),
-                      ),
-                    ),
-                  )
-                : const SizedBox(
-                    height: 0,
-                  ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: TextField(
-                onChanged: (value) {
-                  http
-                      .get(Uri.parse(
-                          "https://api-adresse.data.gouv.fr/search/?q=$value&type=municipality"))
-                      .then((response) {
-                    setState(() {
-                      if (response.statusCode == 200) {
-                        setState(() {
-                          showTowns = true;
-                        });
-                        _townQueryResults = [];
-                        var townsJson = jsonDecode(response.body);
-                        for (var town in townsJson['features']) {
-                          _townQueryResults.add(town['properties']['name']);
-                        }
-                      } else {
-                        _townQueryResults = [];
-                        setState(() {
-                          showTowns = false;
-                        });
-                      }
-                    });
-                  });
-                },
-                controller: _townController,
-                decoration: const InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange)),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange)),
-                  labelText: "Ville",
-                ),
-              ),
-            ),
+            CustomInput(
+                label: "Age", controller: _ageController, isPassword: false),
+            CityInput(label: "Ville", controller: _townController),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -172,14 +110,15 @@ class _RegisterState extends State<Register> {
                     })),
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(color: Colors.black),
+                    style: AdaptiveTheme.of(context).theme.textTheme.bodySmall,
                     children: <TextSpan>[
-                      const TextSpan(text: "J'accepte les"),
+                      const TextSpan(text: "J'accepte les "),
                       TextSpan(
-                          text: " Conditions d'Utilisation",
+                          text: "Conditions d'Utilisation",
                           style: const TextStyle(
                               color: Colors.blue,
-                              decoration: TextDecoration.underline),
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.blue),
                           recognizer: TapGestureRecognizer()
                             // TODO remplacer le lien vers les CGU
                             ..onTap = () {
@@ -364,12 +303,8 @@ class _RegisterState extends State<Register> {
           townsJson['features'][0]['geometry']['coordinates'][1].toString();
       var lon =
           townsJson['features'][0]['geometry']['coordinates'][0].toString();
-      setState(() {
-        latitude = lat;
-      });
-      setState(() {
-        longitude = lon;
-      });
+      latitude = lat;
+      longitude = lon;
     });
   }
 }

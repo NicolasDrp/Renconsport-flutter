@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -48,13 +49,17 @@ class _LoginState extends State<Login> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomInput(
-                          label: "Email", controller: _emailController),
+                          label: "Email",
+                          controller: _emailController,
+                          isPassword: false),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomInput(
-                          label: "Mot de passe",
-                          controller: _passwordController),
+                        label: "Mot de passe",
+                        controller: _passwordController,
+                        isPassword: true,
+                      ),
                     ),
                     CustomElevatedButton(
                         icon: const Icon(null),
@@ -64,14 +69,18 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.only(top: 16.0),
                       child: RichText(
                         text: TextSpan(
-                          style: const TextStyle(color: Colors.black),
+                          style: AdaptiveTheme.of(context)
+                              .theme
+                              .textTheme
+                              .bodySmall,
                           children: <TextSpan>[
-                            const TextSpan(text: "Pas de compte ?"),
+                            const TextSpan(text: "Pas de compte ? "),
                             TextSpan(
-                                text: " S'inscrire",
+                                text: "S'inscrire",
                                 style: const TextStyle(
                                     color: Colors.blue,
-                                    decoration: TextDecoration.underline),
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     widget.nav(6);
