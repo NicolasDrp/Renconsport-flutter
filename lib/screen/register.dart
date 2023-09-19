@@ -192,8 +192,7 @@ class _RegisterState extends State<Register> {
             ),
             // TODO: sports pratiqués
             CustomElevatedButton(
-                hasIcon: false,
-                icon: const Icon(Icons.abc),
+                icon: const Icon(null),
                 text: "S'enregistrer",
                 callback: validateForm)
           ],

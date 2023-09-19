@@ -32,13 +32,16 @@ class _ParametersState extends State<Parameters> {
           ),
           tileColor: AdaptiveTheme.of(context).theme.cardColor,
         ),
-        ListTile(
-          title: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'Modifier mes informations',
-                style: AdaptiveTheme.of(context).theme.textTheme.bodyMedium,
+        GestureDetector(
+          onTap: () => widget.nav(7),
+          child: ListTile(
+            title: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  'Modifier mes informations',
+                  style: AdaptiveTheme.of(context).theme.textTheme.bodyMedium,
+                ),
               ),
             ),
           ),

@@ -11,7 +11,9 @@ import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class ProfileSettings extends StatefulWidget {
-  const ProfileSettings({super.key});
+  const ProfileSettings({super.key, required this.nav});
+
+  final Function nav;
 
   @override
   State<ProfileSettings> createState() => _ProfileSettingsState();
@@ -46,7 +48,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           // changeValue(snapshot.data);
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               child: Column(
                 children: [
                   CustomInput(
@@ -158,9 +160,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   ),
                   // TODO: sports pratiqués
                   CustomElevatedButton(
-                      hasIcon: false,
-                      icon: const Icon(Icons.abc),
-                      text: "S'enregistrer",
+                      icon: const Icon(null),
+                      text: "Modifier",
                       callback: validateForm)
                 ],
               ),
