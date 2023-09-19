@@ -5,6 +5,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:http/http.dart' as http;
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/widget/city_input.dart';
+import 'package:renconsport_flutter/widget/custom_back_button.dart';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
@@ -39,17 +40,7 @@ class _RegisterState extends State<Register> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            SizedBox(
-                height: 80,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      widget.nav(5);
-                    },
-                  ),
-                )),
+            CustomBackButton(nav: widget.nav,index: 5),
             CustomInput(
               label: "Nom d'utilisateur",
               controller: _usernameController,
@@ -139,6 +130,7 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
 
   validateForm() {
     bool hasError = false;
