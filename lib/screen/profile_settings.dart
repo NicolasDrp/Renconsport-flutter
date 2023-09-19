@@ -1,12 +1,15 @@
+//TODO: Change hard coded ID in api calls
+
 import 'dart:convert';
 import 'dart:io';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:http/http.dart' as http;
-// import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/user.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:renconsport_flutter/widget/city_input.dart';
 import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
@@ -23,6 +26,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _emailConfirmController = TextEditingController();
+  final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
@@ -34,9 +38,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   String? selectedGender;
   String latitude = "";
   String longitude = "";
-  bool cguChecked = false;
-  List _townQueryResults = [];
-  bool showTowns = false;
+  String databasePassword = "";
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -44,20 +47,33 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       future: fetchUser(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
-          // return Text(snapshot.data!.email);
-          // changeValue(snapshot.data);
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  CustomBackButton(nav: widget.nav, index: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      "Modifications des informations",
+                      style:
+                          AdaptiveTheme.of(context).theme.textTheme.bodyLarge,
+                    ),
+                  ),
                   CustomInput(
                       label: "Nom d'utilisateur",
-                      controller: _usernameController),
-                  CustomInput(label: "Email", controller: _emailController),
+                      controller: _usernameController,
+                      isPassword: false),
+                  CustomInput(
+                      label: "Email",
+                      controller: _emailController,
+                      isPassword: false),
                   CustomInput(
                       label: "Confirmation Email",
-                      controller: _emailConfirmController),
+                      controller: _emailConfirmController,
+                      isPassword: false),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: DropdownMenu<String>(
@@ -80,89 +96,42 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       },
                     ),
                   ),
-                  CustomInput(label: "Age", controller: _ageController),
-                  (showTowns == true)
-                      ? SizedBox(
-                          height: 160,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: (_townQueryResults.isNotEmpty
-                                  ? _townQueryResults.map((town) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 16),
-                                        child: Card(
-                                          child: ListTile(
-                                            title: Text(town),
-                                            onTap: () {
-                                              setState(() {
-                                                _townController.text = town;
-                                                showTowns = false;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    }).toList()
-                                  : [
-                                      const Padding(
-                                        padding: EdgeInsets.only(bottom: 16),
-                                        child: ListTile(
-                                          title: Text("Aucun résultat"),
-                                        ),
-                                      )
-                                    ]),
-                            ),
-                          ),
-                        )
-                      : const SizedBox(
-                          height: 0,
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: TextField(
-                      onChanged: (value) {
-                        http
-                            .get(Uri.parse(
-                                "https://api-adresse.data.gouv.fr/search/?q=$value&type=municipality"))
-                            .then((response) {
-                          setState(() {
-                            if (response.statusCode == 200) {
-                              setState(() {
-                                showTowns = true;
-                              });
-                              _townQueryResults = [];
-                              var townsJson = jsonDecode(response.body);
-                              for (var town in townsJson['features']) {
-                                _townQueryResults
-                                    .add(town['properties']['name']);
-                              }
-                            } else {
-                              _townQueryResults = [];
-                              setState(() {
-                                showTowns = false;
-                              });
-                            }
-                          });
-                        });
-                      },
-                      controller: _townController,
-                      decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange)),
-                        labelText: "Ville",
-                      ),
-                    ),
-                  ),
-                  // TODO: sports pratiqués
+                  CustomInput(
+                      label: "Age",
+                      controller: _ageController,
+                      isPassword: false),
+                  CityInput(label: "Ville", controller: _townController),
                   CustomElevatedButton(
                       icon: const Icon(null),
-                      text: "Modifier",
-                      callback: validateForm)
+                      text: "Modifier mes informations",
+                      callback: validateModificationForm),
+
+                  //TODO: implement password change
+
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  //   child: Text(
+                  //     "Modification du mot de passe",
+                  //     style:
+                  //         AdaptiveTheme.of(context).theme.textTheme.bodyLarge,
+                  //   ),
+                  // ),
+                  // CustomInput(
+                  //     label: "Ancien mot de passe",
+                  //     controller: _oldPasswordController,
+                  //     isPassword: true),
+                  // CustomInput(
+                  //     label: "Nouveau mot de passe",
+                  //     controller: _passwordController,
+                  //     isPassword: true),
+                  // CustomInput(
+                  //     label: "Confirmation nouveau mot de passe",
+                  //     controller: _passwordConfirmController,
+                  //     isPassword: true),
+                  // CustomElevatedButton(
+                  //     icon: const Icon(null),
+                  //     text: "Modifier mot de passe",
+                  //     callback: validateModificationForm),
                 ],
               ),
             ),
@@ -176,7 +145,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
   }
 
-  changeValue(data) {
+  void changeValue(data) {
     //change value
     _usernameController.text = data.username;
     _emailController.text = data.email;
@@ -185,6 +154,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     _genderController.text = data.gender;
     _ageController.text = data.age.toString();
     _townController.text = data.city;
+    databasePassword = data.password;
   }
 
   Future<User> fetchUser() async {
@@ -211,7 +181,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
   }
 
-  validateForm() {
+  validateModificationForm() {
     bool hasError = false;
     // Verifies that no field is empty
     if (_usernameController.text.isEmpty ||
@@ -280,11 +250,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
     if (hasError == false) {
       getCoordinates();
-      sendForm();
+      sendModificationForm();
     }
   }
 
-  void sendForm() {
+  void sendModificationForm() {
     http
         .put(Uri.parse("$urlApi/users/6"),
             headers: {
@@ -298,6 +268,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
               "gender": selectedGender,
               "latitude": latitude,
               "longitude": longitude,
+              //TODO: Fetch the bio to not erase it
               "bio": "",
             }))
         .then((response) {
@@ -333,6 +304,57 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       setState(() {
         longitude = lon;
       });
+    });
+  }
+
+  validatePasswordForm() {
+    bool hasError = false;
+    if (_oldPasswordController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _passwordConfirmController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Veuillez remplir tous les champs"),
+        ),
+      );
+      hasError = true;
+      return;
+    }
+    if (_passwordController.text != _passwordConfirmController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Les mots de passe ne correspondent pas"),
+        ),
+      );
+      hasError = true;
+      return;
+    }
+    if (hasError == false) {
+      sendPasswordForm();
+    }
+  }
+
+  void sendPasswordForm() {
+    http
+        .patch(Uri.parse("$urlApi/users/6"),
+            headers: {
+              "Content-Type": "application/json; charset=UTF-8",
+            },
+            body: json.encode({"password": _passwordController.text}))
+        .then((response) {
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Votre Mot de passe a bien été modifié"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Une erreur est survenue"),
+          ),
+        );
+      }
     });
   }
 }

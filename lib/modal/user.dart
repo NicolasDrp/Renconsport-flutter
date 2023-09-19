@@ -2,6 +2,7 @@ class User {
   final int id;
   final String username;
   final String email;
+  final String password;
   final String bio;
   final dynamic avatarUrl;
   final String city;
@@ -12,6 +13,7 @@ class User {
   User(
       {required this.id,
       required this.email,
+      required this.password,
       required this.bio,
       required this.username,
       required this.city,
@@ -25,6 +27,7 @@ class User {
       id: json['id'],
       username: json['username'],
       email: json['email'],
+      password: json['password'],
       bio: json['bio'],
       avatarUrl: json['avatar_url'],
       city: json['city'],
