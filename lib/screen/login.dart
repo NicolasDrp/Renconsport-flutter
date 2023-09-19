@@ -62,8 +62,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     CustomElevatedButton(
-                        hasIcon: false,
-                        icon: const Icon(Icons.abc),
+                        icon: const Icon(null),
                         text: "Se connecter",
                         callback: validateForm),
                     Padding(

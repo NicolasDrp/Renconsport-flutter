@@ -6,6 +6,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:renconsport_flutter/screen/login.dart';
 import 'package:renconsport_flutter/screen/parameters.dart';
 import 'package:renconsport_flutter/screen/profile.dart';
+import 'package:renconsport_flutter/screen/profile_settings.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
 import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:renconsport_flutter/widget/custom_app_bar.dart';
@@ -35,7 +36,7 @@ class _MainAppState extends State<MainApp> {
         pageIndex = index;
       });
     }
-    if (index == 5 || index == 6) {
+    if (index == 5 || index == 6 || index == 7) {
       setState(() {
         showBars = false;
       });
@@ -57,7 +58,8 @@ class _MainAppState extends State<MainApp> {
       Profile(nav: navigateToPage),
       Parameters(nav: navigateToPage),
       Login(nav: navigateToPage),
-      Register(nav: navigateToPage)
+      Register(nav: navigateToPage),
+      ProfileSettings(nav: navigateToPage)
     ];
   }
 
