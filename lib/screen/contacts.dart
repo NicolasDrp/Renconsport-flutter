@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Contacts extends StatefulWidget {
-  const Contacts({super.key});
+  const Contacts({super.key, required this.nav});
+
+  final Function nav;
 
   @override
   State<Contacts> createState() => _ContactsState();

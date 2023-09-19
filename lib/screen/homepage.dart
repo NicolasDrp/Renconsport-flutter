@@ -8,10 +8,12 @@ import 'package:renconsport_flutter/widget/profile_card.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:renconsport_flutter/screen/login.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.nav});
+
+  final Function nav;
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -116,8 +118,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void redirect() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Login()));
+    widget.nav(5);
   }
 
   void _swipe(int index, AppinioSwiperDirection direction) {

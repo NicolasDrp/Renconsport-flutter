@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({super.key, required this.nav});
+
+  final Function nav;
 
   @override
   State<Profile> createState() => _ProfileState();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:renconsport_flutter/screen/Register.dart';
 import 'package:renconsport_flutter/screen/contacts.dart';
 import 'package:renconsport_flutter/screen/homepage.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:renconsport_flutter/screen/login.dart';
 import 'package:renconsport_flutter/screen/parameters.dart';
 import 'package:renconsport_flutter/screen/profile.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
@@ -22,15 +24,10 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final List<Widget> pageList = [
-    const HomePage(),
-    const Sessions(),
-    const Contacts(),
-    const Profile(),
-    const Parameters()
-  ];
+  late List<Widget> pageList;
   int pageIndex = 0;
   String currentTutorial = "placeholder"; // TODO: implement tutorial
+  bool showBars = true;
 
   void navigateToPage(int index) {
     if (index != pageIndex) {
@@ -38,6 +35,30 @@ class _MainAppState extends State<MainApp> {
         pageIndex = index;
       });
     }
+    if (index == 5 || index == 6) {
+      setState(() {
+        showBars = false;
+      });
+    } else {
+      setState(() {
+        showBars = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: finish initState
+    super.initState();
+    pageList = [
+      HomePage(nav: navigateToPage),
+      const Sessions(),
+      Contacts(nav: navigateToPage),
+      Profile(nav: navigateToPage),
+      Parameters(nav: navigateToPage),
+      Login(nav: navigateToPage),
+      Register(nav: navigateToPage)
+    ];
   }
 
   @override
@@ -81,20 +102,26 @@ class _MainAppState extends State<MainApp> {
         theme: theme,
         darkTheme: darkTheme,
         home: Scaffold(
-            appBar: CustomAppbar(
-              tutorial: currentTutorial,
-              callback: navigateToPage,
-            ),
-            body: pageList[pageIndex],
-            bottomNavigationBar: BottomAppBarWidget(
-              callback: navigateToPage,
-              currentPage: pageIndex,
-            )),
+          appBar: showBars
+              ? CustomAppbar(
+                  tutorial: currentTutorial,
+                  callback: navigateToPage,
+                )
+              : null,
+          body: pageList[pageIndex],
+          bottomNavigationBar: showBars
+              ? BottomAppBarWidget(
+                  callback: navigateToPage,
+                  currentPage: pageIndex,
+                )
+              : null,
+        ),
       ),
     );
   }
 
   AdaptiveThemeMode? getUserTheme() {
+    // ignore: prefer_typing_uninitialized_variables
     var theme;
     AdaptiveTheme.getThemeMode().then((themeMode) {
       theme = themeMode;

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:renconsport_flutter/screen/login.dart';
 
 class Parameters extends StatefulWidget {
-  const Parameters({super.key});
+  const Parameters({super.key, required this.nav});
+
+  final Function nav;
 
   @override
   State<Parameters> createState() => _ParametersState();
@@ -154,7 +155,6 @@ class _ParametersState extends State<Parameters> {
   }
 
   void redirect() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Login()));
+    widget.nav(5);
   }
 }
