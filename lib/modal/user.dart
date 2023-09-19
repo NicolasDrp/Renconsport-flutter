@@ -7,6 +7,7 @@ class User {
   final String city;
   final int age;
   final List<dynamic> sportTypeList;
+  final String gender;
 
   User(
       {required this.id,
@@ -16,18 +17,20 @@ class User {
       required this.city,
       required this.age,
       required this.sportTypeList,
-      required this.avatarUrl
-      });
+      required this.avatarUrl,
+      required this.gender});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        id: json['id'],
-        username: json['username'],
-        email: json['email'],
-        bio: json['bio'],
-        avatarUrl: json['avatar_url'],
-        city: json['city'],
-        age: json['age'],
-        sportTypeList: json['sport_type_list']);
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      bio: json['bio'],
+      avatarUrl: json['avatar_url'],
+      city: json['city'],
+      age: json['age'],
+      sportTypeList: json['sport_type_list'],
+      gender: json['gender'],
+    );
   }
 }
