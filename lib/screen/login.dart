@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
     });
   }
 
-  validateForm() {
+  void validateForm() {
     String email = _emailController.text;
     String password = _passwordController.text;
     if (email.isEmpty || password.isEmpty) {

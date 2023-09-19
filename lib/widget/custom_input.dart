@@ -47,7 +47,7 @@ class _CustomInputState extends State<CustomInput> {
     );
   }
 
-  getStyle() {
+  OutlineInputBorder getStyle() {
     return const OutlineInputBorder(
         borderSide: BorderSide(color: Colors.orange));
   }

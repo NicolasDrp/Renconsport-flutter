@@ -32,6 +32,11 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Ignore Sonar scanner
+.scannerwork/
+sonar-project.properties
+analysis_options.yaml.sonar
+
 # Symbolication related
 app.*.symbols
 
