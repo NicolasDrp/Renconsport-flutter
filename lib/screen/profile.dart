@@ -21,6 +21,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String bio = '';
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +87,69 @@ class _ProfileState extends State<Profile> {
                       )
                     ]),
                   )),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: Center(
+                      child: ElevatedButton(
+                        child: const Text('Changer ma Bio'),
+                        onPressed: () {
+                          // when raised button is pressed
+                          // we display showModalBottomSheet
+                          showModalBottomSheet<void>(
+                            // context and builder are
+                            // required properties in this widget
+                            context: context,
+                            builder: (BuildContext context) {
+                              // we set up a container inside which
+                              // we create center column and display text
+                  
+                              // Returning SizedBox instead of a Container
+                              return Form(
+                                key: _formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        hintText: 'Entrez votre nouvelle Bio',
+                                      ),
+                                      validator: (String? value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter some text';
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          bio =
+                                              value; // Store the entered value in the 'bio' variable.
+                                        });
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Validate will return true if the form is valid, or false if
+                                          // the form is invalid.
+                                          if (_formKey.currentState!.validate()) {
+                                            sendModificationForm(
+                                                bio, snapshot.data!.id);
+                                          }
+                                        },
+                                        child: const Text('Submit'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                   FutureBuilder<List<String>>(
                     future: fetchSports(snapshot.data!),
                     builder: (context, snapshotlist) {
@@ -98,7 +163,6 @@ class _ProfileState extends State<Profile> {
                       }
                     },
                   ),
-                  
                 ],
               ),
             ),
@@ -182,5 +246,38 @@ class _ProfileState extends State<Profile> {
     } else {
       return "assets/placeholder_avatar.png";
     }
+  }
+
+  void sendModificationForm(String bio, int id) {
+    final Map<String, dynamic> requestBody = {
+      "bio": bio,
+    };
+
+    http
+        .patch(
+      Uri.parse("$urlApi/users/$id"),
+      headers: {
+        "Content-Type":
+            "application/merge-patch+json", // Update the Content-Type header
+      },
+      body: json.encode(requestBody),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        Navigator.of(context).pop();
+        setState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Votre compte a bien été modifié"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Une erreur est survenue"),
+          ),
+        );
+      }
+    });
   }
 }
