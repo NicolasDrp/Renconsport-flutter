@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/main.dart';
@@ -9,6 +8,7 @@ import 'package:renconsport_flutter/modal/sporttype.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:renconsport_flutter/widget/tags.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key, required this.nav});
@@ -94,14 +94,11 @@ class _ProfileState extends State<Profile> {
                       } else if (snapshotlist.hasError) {
                         return Text('Error: ${snapshotlist.error}');
                       } else {
-                        return Column(
-                          children: snapshotlist.data!
-                              .map((sportName) => Text(sportName))
-                              .toList(),
-                        );
+                        return Tags(sports: snapshotlist.data!);
                       }
                     },
-                  )
+                  ),
+                  
                 ],
               ),
             ),
@@ -127,24 +124,29 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<User> fetchUser() async {
-    String? token = await storage.read(key: "token");
-    if (token == null) {
-      throw Exception(
-          ("Token not found")); // Gérer le cas où le token n'est pas disponible
-    }
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    final response = await http
-        .get(Uri.parse("$urlApi/users/${decodedToken['id']}"), headers: {
-      HttpHeaders.authorizationHeader: token,
-    });
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      final result = jsonDecode(response.body);
-      return User.fromJson(result);
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
+    try {
+      String? token = await storage.read(key: "token");
+      if (token == null) {
+        throw Exception(
+            ("Token not found")); // Gérer le cas où le token n'est pas disponible
+      }
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      final response = await http
+          .get(Uri.parse("$urlApi/users/${decodedToken['id']}"), headers: {
+        HttpHeaders.authorizationHeader: token,
+      });
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+        final result = jsonDecode(response.body);
+        return User.fromJson(result);
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to load User');
+      }
+    } catch (e) {
+      print('Error in fetchUser: $e');
       throw Exception('Failed to load User');
     }
   }
@@ -152,29 +154,26 @@ class _ProfileState extends State<Profile> {
   Future<List<String>> fetchSports(User user) async {
     String? token = await storage.read(key: "token");
     if (token == null) {
-      throw Exception(
-          ("Token not found")); // Gérer le cas où le token n'est pas disponible
+      throw Exception("Token not found");
     }
-    List<String> sportNames = [];
-    user.sportTypeList.forEach((sport_type) async {
+    List<String> fetchSportFutures = [];
+    for (var sportType in user.sportTypeList) {
       final response = await http.get(
-          Uri.parse("https://renconsport-api.osc-fr1.scalingo.io${sport_type}"),
+          Uri.parse("https://renconsport-api.osc-fr1.scalingo.io$sportType"),
           headers: {
-            HttpHeaders.authorizationHeader: token,
+            HttpHeaders.authorizationHeader: "Bearer $token",
           });
       if (response.statusCode == 200) {
-        // If the server did return a 200 OK response,
-        // then parse the JSON.
         final result = jsonDecode(response.body);
         final type_sport = SportType.fromJson(result);
-        sportNames.add(type_sport.name);
+        fetchSportFutures.add(type_sport.name);
       } else {
-        // If the server did not return a 200 OK response,
-        // then throw an exception.
-        throw Exception('Failed to load User');
+        throw Exception('Failed to load Sport Type');
       }
-    });
-    return sportNames;
+    }
+    ;
+    // Wait for all requests to complete.
+    return fetchSportFutures;
   }
 
   String profileImage(User user) {
