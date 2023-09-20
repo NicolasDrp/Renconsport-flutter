@@ -1,5 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SessionCard extends StatefulWidget {
   const SessionCard(
@@ -27,6 +28,8 @@ class SessionCard extends StatefulWidget {
 }
 
 class _SessionCardState extends State<SessionCard> {
+  FlutterSecureStorage storage = FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return Container(

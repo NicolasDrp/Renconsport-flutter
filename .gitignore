@@ -47,3 +47,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+analysis_options.yaml.sonar
+sonar-project.properties
+.scannerwork/.sonar_lock
+.scannerwork/report-task.txt
