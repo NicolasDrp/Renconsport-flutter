@@ -49,7 +49,6 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    // TODO: finish initState
     super.initState();
     pageList = [
       HomePage(nav: navigateToPage),
@@ -79,8 +78,10 @@ class _MainAppState extends State<MainApp> {
         hintColor: secondaryLight,
         cardColor: primary,
         textTheme: const TextTheme(
+          bodySmall: TextStyle(color: Color(0xFF1F1D1D), fontSize: 16),
           bodyMedium: TextStyle(color: Color(0xFF1F1D1D), fontSize: 20),
           bodyLarge: TextStyle(color: Color(0xFF1F1D1D), fontSize: 24),
+          labelMedium: TextStyle(color: secondaryLight, fontSize: 20),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: light, unselectedItemColor: dark),
@@ -92,8 +93,11 @@ class _MainAppState extends State<MainApp> {
         hintColor: secondaryDark,
         cardColor: dark,
         textTheme: const TextTheme(
-            bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
-            bodyLarge: TextStyle(color: Color(0xFFFAFAFA), fontSize: 24)),
+          bodySmall: TextStyle(color: Color(0xFFFAFAFA), fontSize: 16),
+          bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
+          bodyLarge: TextStyle(color: Color(0xFFFAFAFA), fontSize: 24),
+          labelMedium: TextStyle(color: light, fontSize: 20),
+        ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: primary, unselectedItemColor: light),
       ),
