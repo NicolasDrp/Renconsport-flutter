@@ -9,6 +9,7 @@ import 'package:renconsport_flutter/widget/profile_card.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.nav});
@@ -25,6 +26,9 @@ class _HomePageState extends State<HomePage> {
   bool isLogged = true;
   int indexProfile = 0;
   Key _futureBuilderKey = UniqueKey();
+  late int idTarget;
+  late String idToken;
+
   @override
   Widget build(BuildContext context) {
     checkLogged();
@@ -35,6 +39,7 @@ class _HomePageState extends State<HomePage> {
           future: fetchUser(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
+              idTarget = snapshot.data![indexProfile].id;
               return Column(
                 children: [
                   CupertinoPageScaffold(
@@ -124,15 +129,16 @@ class _HomePageState extends State<HomePage> {
 
   void _swipe(int index, AppinioSwiperDirection direction) {
     if (direction.name == "left") {
-      addLike(6, 7, false);
+      addLike(int.parse(idToken), idTarget, false);
     } else if (direction.name == "right") {
-      addLike(6, 7, true);
+      addLike(int.parse(idToken), idTarget, true);
     }
     setState(() {
       indexProfile++;
     });
   }
 
+  //TODO: Récuperer l'id de l'utilisateur connecter
   void _onEnd() {
     setState(() {
       indexProfile = 0;
@@ -146,6 +152,8 @@ class _HomePageState extends State<HomePage> {
       throw Exception(
           ("Token not found")); // Gérer le cas où le token n'est pas disponible
     }
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    idToken = decodedToken['id'];
     final response = await http.get(
         Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'),
         headers: {
@@ -177,10 +185,8 @@ class _HomePageState extends State<HomePage> {
     final response = await http.post(
       Uri.parse('$urlApi/likes'),
       headers: {
-        HttpHeaders.authorizationHeader:
-            formattedToken,
-        HttpHeaders.contentTypeHeader:
-            "application/json",
+        HttpHeaders.authorizationHeader: formattedToken,
+        HttpHeaders.contentTypeHeader: "application/json",
       },
       body: json.encode({
         "isLike": isLike,
