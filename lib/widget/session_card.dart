@@ -103,11 +103,13 @@ class _SessionCardState extends State<SessionCard> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Text(
-              widget.length.toString(),
-              style: AdaptiveTheme.of(context).theme.textTheme.bodySmall,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                widget.length.toString(),
+                style: AdaptiveTheme.of(context).theme.textTheme.bodySmall,
+              ),
             ),
-          ),
           widget.isLastSession
               ? SizedBox(
                   height: 0,
