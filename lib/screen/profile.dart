@@ -9,6 +9,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:renconsport_flutter/widget/tags.dart';
+import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
+import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key, required this.nav});
@@ -22,6 +24,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _bioController = TextEditingController();
   String bio = '';
 
   @override
@@ -61,95 +64,94 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Center(
-                      child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12)),
-                    width: 340,
-                    child: Column(children: [
-                      Center(
-                        child: Text(
-                          "A propos de moi",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "${snapshot.data!.bio}",
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
-                            )),
-                      )
-                    ]),
-                  )),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Center(
-                      child: ElevatedButton(
-                        child: const Text('Changer ma Bio'),
-                        onPressed: () {
-                          // when raised button is pressed
-                          // we display showModalBottomSheet
-                          showModalBottomSheet<void>(
-                            // context and builder are
-                            // required properties in this widget
-                            context: context,
-                            builder: (BuildContext context) {
-                              // we set up a container inside which
-                              // we create center column and display text
-                  
-                              // Returning SizedBox instead of a Container
-                              return Form(
+                      child: GestureDetector(
+                    onTap: () {
+                      // when raised button is pressed
+                      // we display showModalBottomSheet
+                      showModalBottomSheet<void>(
+                        // context and builder are
+                        // required properties in this widget
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (BuildContext context) {
+                          // we set up a container inside which
+                          // we create center column and display text
+
+                          // Returning SizedBox instead of a Container
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
+                            child: Container(
+                              child: Form(
                                 key: _formKey,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
-                                    TextFormField(
-                                      decoration: const InputDecoration(
-                                        hintText: 'Entrez votre nouvelle Bio',
-                                      ),
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (value) {
-                                        setState(() {
-                                          bio =
-                                              value; // Store the entered value in the 'bio' variable.
-                                        });
-                                      },
+                                    SizedBox(
+                                      height: 10,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 16.0),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          // Validate will return true if the form is valid, or false if
-                                          // the form is invalid.
-                                          if (_formKey.currentState!.validate()) {
-                                            sendModificationForm(
-                                                bio, snapshot.data!.id);
-                                          }
-                                        },
-                                        child: const Text('Submit'),
-                                      ),
+                                          horizontal: 20),
+                                      child: CustomInput(
+                                          label: "Changer votre Bio",
+                                          controller: _bioController,
+                                          isPassword: false),
                                     ),
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16.0),
+                                        child: Center(
+                                          child: CustomElevatedButton(
+                                            icon: const Icon(null),
+                                            text: "Changer ma bio",
+                                            callback: () {
+                                              // Validate will return true if the form is valid, or false if
+                                              // the form is invalid.
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                validateForm(snapshot.data!.id);
+                                              }
+                                            },
+                                          ),
+                                        )),
                                   ],
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           );
                         },
-                      ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12)),
+                      width: 340,
+                      child: Column(children: [
+                        Center(
+                          child: Text(
+                            "A propos de moi",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "${snapshot.data!.bio}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              )),
+                        )
+                      ]),
                     ),
-                  ),
+                  )),
                   FutureBuilder<List<String>>(
                     future: fetchSports(snapshot.data!),
                     builder: (context, snapshotlist) {
@@ -241,18 +243,31 @@ class _ProfileState extends State<Profile> {
   }
 
   String profileImage(User user) {
-    if (user.avatarUrl != null) {
-      return user.avatarUrl;
+    if (user.avatar != null) {
+      return user.avatar;
     } else {
       return "assets/placeholder_avatar.png";
     }
   }
 
-  void sendModificationForm(String bio, int id) {
-    final Map<String, dynamic> requestBody = {
-      "bio": bio,
-    };
+  void validateForm(int id) {
+    bool hasError = false;
+    // Verifies that no field is empty
+    if (_bioController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Veuillez remplir tous les champs"),
+        ),
+      );
+      hasError = true;
+      return;
+    }
+    if (hasError == false) {
+      sendModificationForm(id);
+    }
+  }
 
+  void sendModificationForm(int id) {
     http
         .patch(
       Uri.parse("$urlApi/users/$id"),
@@ -260,7 +275,9 @@ class _ProfileState extends State<Profile> {
         "Content-Type":
             "application/merge-patch+json", // Update the Content-Type header
       },
-      body: json.encode(requestBody),
+      body: json.encode({
+        "bio": _bioController.text,
+      }),
     )
         .then((response) {
       if (response.statusCode == 200) {
