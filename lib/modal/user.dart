@@ -9,6 +9,8 @@ class User {
   final int age;
   final List<dynamic> sportTypeList;
   final String gender;
+  final List<dynamic> likeList;
+  final List<dynamic> receivedLikeList;
 
   User(
       {required this.id,

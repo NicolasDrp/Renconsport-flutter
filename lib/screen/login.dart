@@ -2,6 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -115,6 +116,9 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         String token = json.decode(response.body)['token'];
         storage.write(key: 'token', value: token);
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+        String id = decodedToken['id'];
+        storage.write(key: 'id', value: id);
         widget.nav(0);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -26,7 +26,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   late List<Widget> pageList;
-  int pageIndex = 0;
+  int pageIndex = 0   ;
   String currentTutorial = "placeholder"; // TODO: implement tutorial
   bool showBars = true;
 
@@ -49,7 +49,6 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    // TODO: finish initState
     super.initState();
     pageList = [
       HomePage(nav: navigateToPage),
@@ -78,9 +77,12 @@ class _MainAppState extends State<MainApp> {
         primaryColor: primary,
         hintColor: secondaryLight,
         cardColor: primary,
+        canvasColor: light,
         textTheme: const TextTheme(
+          bodySmall: TextStyle(color: Color(0xFF1F1D1D), fontSize: 16),
           bodyMedium: TextStyle(color: Color(0xFF1F1D1D), fontSize: 20),
           bodyLarge: TextStyle(color: Color(0xFF1F1D1D), fontSize: 24),
+          labelMedium: TextStyle(color: secondaryLight, fontSize: 20),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: light, unselectedItemColor: dark),
@@ -91,9 +93,13 @@ class _MainAppState extends State<MainApp> {
         primaryColor: primary,
         hintColor: secondaryDark,
         cardColor: dark,
+        canvasColor: dark,
         textTheme: const TextTheme(
-            bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
-            bodyLarge: TextStyle(color: Color(0xFFFAFAFA), fontSize: 24)),
+          bodySmall: TextStyle(color: Color(0xFFFAFAFA), fontSize: 16),
+          bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
+          bodyLarge: TextStyle(color: Color(0xFFFAFAFA), fontSize: 24),
+          labelMedium: TextStyle(color: light, fontSize: 20),
+        ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: primary, unselectedItemColor: light),
       ),

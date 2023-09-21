@@ -93,16 +93,14 @@ class _ProfileState extends State<Profile> {
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20),
                                       child: CustomInput(
                                           label: "Changer votre Bio",
                                           controller: _bioController,
                                           isPassword: false),
                                     ),
                                     Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 16.0),
+                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
                                         child: Center(
                                           child: CustomElevatedButton(
                                             icon: const Icon(null),
