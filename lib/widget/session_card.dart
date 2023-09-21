@@ -110,24 +110,25 @@ class _SessionCardState extends State<SessionCard> {
                 style: AdaptiveTheme.of(context).theme.textTheme.bodySmall,
               ),
             ),
-          widget.isLastSession
-              ? SizedBox(
-                  height: 0,
-                )
-              : OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                        color: AdaptiveTheme.of(context).theme.primaryColor),
-                  ),
-                  child: Text(
-                    "Rejoindre",
-                    style:
-                        AdaptiveTheme.of(context).theme.textTheme.labelMedium,
-                  ),
-                  onPressed: () {
-                    // TODO: implement joining sessions
-                  },
-                ),
+            // widget.isLastSession
+            //     ? SizedBox(
+            //         height: 0,
+            //       )
+            //     : OutlinedButton(
+            //         style: OutlinedButton.styleFrom(
+            //           side: BorderSide(
+            //               color: AdaptiveTheme.of(context).theme.primaryColor),
+            //         ),
+            //         child: Text(
+            //           "Rejoindre",
+            //           style:
+            //               AdaptiveTheme.of(context).theme.textTheme.labelMedium,
+            //         ),
+            //         onPressed: () {
+            //           // TODO: implement joining sessions
+            //         },
+            //       ),
+          ),
         ],
       ),
     );

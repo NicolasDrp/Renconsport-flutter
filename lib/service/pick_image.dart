@@ -35,7 +35,7 @@ class PickImage {
     }
   }
 
-  ShowImage(imageBytes) {
+  dynamic showImage(imageBytes) {
     return imageBytes != null
         ? Image.memory(
             imageBytes ?? Uint8List(0),

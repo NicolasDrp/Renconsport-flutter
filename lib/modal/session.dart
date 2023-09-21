@@ -1,6 +1,4 @@
-import 'package:renconsport_flutter/modal/sporttype.dart';
 import 'package:renconsport_flutter/modal/user.dart';
-import 'package:renconsport_flutter/services/user_service.dart';
 
 class Session {
   final int id;

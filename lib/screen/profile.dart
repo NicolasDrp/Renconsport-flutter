@@ -229,13 +229,12 @@ class _ProfileState extends State<Profile> {
           });
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        final type_sport = SportType.fromJson(result);
-        fetchSportFutures.add(type_sport.name);
+        final typeSport = SportType.fromJson(result);
+        fetchSportFutures.add(typeSport.name);
       } else {
         throw Exception('Failed to load Sport Type');
       }
     }
-    ;
     // Wait for all requests to complete.
     return fetchSportFutures;
   }

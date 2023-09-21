@@ -2,15 +2,29 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
   FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  Future<String> getCurrentToken() async {
+  static Future<String> getCurrentToken() async {
+    FlutterSecureStorage _storage = FlutterSecureStorage();
     String? token = await _storage.read(key: "token");
     return token!;
+  }
+
+  static Future<bool> checkValidity(String token) async {
+    var response = await http.post(Uri.parse("$urlApi/users"), headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    });
+    if (response.statusCode != 401) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<String> getCurrentUserId() async {

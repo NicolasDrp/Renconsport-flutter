@@ -22,7 +22,9 @@ class User {
       required this.age,
       required this.sportTypeList,
       required this.avatar,
-      required this.gender});
+      required this.gender,
+      required this.likeList,
+      required this.receivedLikeList});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -36,6 +38,8 @@ class User {
       age: json['age'],
       sportTypeList: json['sportTypeList'],
       gender: json['gender'],
+      likeList: json['likeList'],
+      receivedLikeList: json['receivedLikeList'],
     );
   }
 }

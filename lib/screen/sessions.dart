@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/session.dart';
-import 'package:renconsport_flutter/services/user_service.dart';
 import 'package:renconsport_flutter/widget/session_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';

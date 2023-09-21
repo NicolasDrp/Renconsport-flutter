@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/user.dart';
+import 'package:renconsport_flutter/services/user_service.dart';
 import 'package:renconsport_flutter/widget/profile_card.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -118,8 +119,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void checkLogged() async {
-    if (!await storage.containsKey(key: "token")) {
+    String? token;
+    bool valid = false;
+    if (await storage.containsKey(key: "token")) {
+      token = await storage.read(key: "token");
+      valid = await UserService.checkValidity(token!);
+    }
+    if (token == null) {
       redirect();
+    } else {
+      if (valid == true) {
+        return;
+      } else {
+        redirect();
+      }
     }
   }
 
