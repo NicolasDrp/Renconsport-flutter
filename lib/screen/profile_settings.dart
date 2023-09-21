@@ -34,6 +34,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _townController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final Key _futureBuilderKey = UniqueKey();
   String? selectedGender;
@@ -48,6 +49,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       future: fetchUser(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
+          _bioController.text = snapshot.data!.bio;
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
@@ -274,8 +276,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
               "gender": selectedGender,
               "latitude": latitude,
               "longitude": longitude,
-              //TODO: Fetch the bio to not erase it
-              "bio": "",
+              "bio": _bioController.text,
             }))
         .then((response) {
       if (response.statusCode == 200) {
