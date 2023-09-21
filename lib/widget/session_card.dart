@@ -20,7 +20,7 @@ class SessionCard extends StatefulWidget {
   final String date;
   final String time;
   final String description;
-  final String length;
+  final int length;
   final bool isLastSession;
 
   @override
@@ -103,12 +103,9 @@ class _SessionCardState extends State<SessionCard> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                widget.length,
-                style: AdaptiveTheme.of(context).theme.textTheme.bodySmall,
-              ),
+            child: Text(
+              widget.length.toString(),
+              style: AdaptiveTheme.of(context).theme.textTheme.bodySmall,
             ),
           ),
           widget.isLastSession

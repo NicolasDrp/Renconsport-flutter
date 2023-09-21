@@ -102,7 +102,7 @@ class _ProfileState extends State<Profile> {
                             builder: (BuildContext context) {
                               // we set up a container inside which
                               // we create center column and display text
-                  
+
                               // Returning SizedBox instead of a Container
                               return Form(
                                 key: _formKey,
@@ -133,7 +133,8 @@ class _ProfileState extends State<Profile> {
                                         onPressed: () {
                                           // Validate will return true if the form is valid, or false if
                                           // the form is invalid.
-                                          if (_formKey.currentState!.validate()) {
+                                          if (_formKey.currentState!
+                                              .validate()) {
                                             sendModificationForm(
                                                 bio, snapshot.data!.id);
                                           }
@@ -241,8 +242,8 @@ class _ProfileState extends State<Profile> {
   }
 
   String profileImage(User user) {
-    if (user.avatarUrl != null) {
-      return user.avatarUrl;
+    if (user.avatar != null) {
+      return user.avatar;
     } else {
       return "assets/placeholder_avatar.png";
     }

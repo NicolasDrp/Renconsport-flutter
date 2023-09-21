@@ -4,7 +4,7 @@ class User {
   final String email;
   final String password;
   final String bio;
-  final dynamic avatarUrl;
+  final dynamic avatar;
   final String city;
   final int age;
   final List<dynamic> sportTypeList;
@@ -21,7 +21,7 @@ class User {
       required this.city,
       required this.age,
       required this.sportTypeList,
-      required this.avatarUrl,
+      required this.avatar,
       required this.gender,
       required this.likeList,
       required this.receivedLikeList});
@@ -33,7 +33,7 @@ class User {
         email: json['email'],
         password: json['password'],
         bio: json['bio'],
-        avatarUrl: json['avatar_url'],
+        avatar: json['avatar_url'],
         city: json['city'],
         age: json['age'],
         sportTypeList: json['sport_type_list'],

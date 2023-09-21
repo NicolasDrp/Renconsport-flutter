@@ -26,7 +26,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   late List<Widget> pageList;
-  int pageIndex = 0;
+  int pageIndex = 0   ;
   String currentTutorial = "placeholder"; // TODO: implement tutorial
   bool showBars = true;
 
