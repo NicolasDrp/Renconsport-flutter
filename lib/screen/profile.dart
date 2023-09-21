@@ -241,8 +241,8 @@ class _ProfileState extends State<Profile> {
   }
 
   String profileImage(User user) {
-    if (user.avatarUrl != null) {
-      return user.avatarUrl;
+    if (user.avatar != null) {
+      return user.avatar;
     } else {
       return "assets/placeholder_avatar.png";
     }

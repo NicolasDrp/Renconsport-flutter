@@ -104,7 +104,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   CityInput(label: "Ville", controller: _townController),
                   CustomElevatedButton(
                       icon: const Icon(null),
-                      text: "Modifier mes informations",
+                      text: "Modifier informations",
                       callback: validateModificationForm),
 
                   //TODO: implement password change
@@ -255,9 +255,14 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
   }
 
-  void sendModificationForm() {
+  Future<void> sendModificationForm() async {
+    String? idUser = await storage.read(key: "id");
+    if (idUser == null) {
+      throw Exception(
+          ("Id not found")); // Gérer le cas où le token n'est pas disponible
+    }
     http
-        .put(Uri.parse("$urlApi/users/6"),
+        .put(Uri.parse("$urlApi/users/$idUser"),
             headers: {
               "Content-Type": "application/json; charset=UTF-8",
             },
@@ -299,12 +304,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           townsJson['features'][0]['geometry']['coordinates'][1].toString();
       var lon =
           townsJson['features'][0]['geometry']['coordinates'][0].toString();
-      setState(() {
-        latitude = lat;
-      });
-      setState(() {
-        longitude = lon;
-      });
+      latitude = lat;
+      longitude = lon;
     });
   }
 
@@ -335,9 +336,14 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
   }
 
-  void sendPasswordForm() {
+  Future<void> sendPasswordForm() async {
+    String? id = await storage.read(key: "id");
+    if (id == null) {
+      throw Exception(
+          ("Token not found")); // Gérer le cas où le token n'est pas disponible
+    }
     http
-        .patch(Uri.parse("$urlApi/users/6"),
+        .patch(Uri.parse("$urlApi/users/$id"),
             headers: {
               "Content-Type": "application/json; charset=UTF-8",
             },
