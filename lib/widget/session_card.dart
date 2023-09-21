@@ -36,7 +36,7 @@ class _SessionCardState extends State<SessionCard> {
       width: MediaQuery.of(context).size.width - 40,
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: AdaptiveTheme.of(context).theme.canvasColor,
           borderRadius: BorderRadius.circular(20),
           border:
               Border.all(color: AdaptiveTheme.of(context).theme.primaryColor),

@@ -19,29 +19,30 @@ class _SessionsState extends State<Sessions> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(
-              "Prochaine Sessions",
-              style: TextStyle(fontSize: 26),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                "Prochaine Sessions",
+                style: TextStyle(fontSize: 26),
+              ),
             ),
-          ),
-          SessionCard(
-              sportType: sportType,
-              username: username,
-              date: date,
-              time: time,
-              description: description,
-              length: length,
-              id: id,
-              isLastSession: false)
-        ],
+            SessionCard(
+                sportType: sportType,
+                username: username,
+                date: date,
+                time: time,
+                description: description,
+                length: length,
+                id: id,
+                isLastSession: false)
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

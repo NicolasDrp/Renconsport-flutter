@@ -77,6 +77,7 @@ class _MainAppState extends State<MainApp> {
         primaryColor: primary,
         hintColor: secondaryLight,
         cardColor: primary,
+        canvasColor: light,
         textTheme: const TextTheme(
           bodySmall: TextStyle(color: Color(0xFF1F1D1D), fontSize: 16),
           bodyMedium: TextStyle(color: Color(0xFF1F1D1D), fontSize: 20),
@@ -92,6 +93,7 @@ class _MainAppState extends State<MainApp> {
         primaryColor: primary,
         hintColor: secondaryDark,
         cardColor: dark,
+        canvasColor: dark,
         textTheme: const TextTheme(
           bodySmall: TextStyle(color: Color(0xFFFAFAFA), fontSize: 16),
           bodyMedium: TextStyle(color: Color(0xFFFAFAFA), fontSize: 20),
