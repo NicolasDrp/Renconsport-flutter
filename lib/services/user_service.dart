@@ -7,11 +7,11 @@ import 'package:renconsport_flutter/modal/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   static Future<String> getCurrentToken() async {
-    FlutterSecureStorage _storage = FlutterSecureStorage();
-    String? token = await _storage.read(key: "token");
+    FlutterSecureStorage storage = FlutterSecureStorage();
+    String? token = await storage.read(key: "token");
     return token!;
   }
 
