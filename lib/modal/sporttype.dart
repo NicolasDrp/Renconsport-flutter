@@ -11,6 +11,6 @@ class SportType {
 
   factory SportType.fromJson(Map<String, dynamic> json) {
     return SportType(
-        id: json['id'], name: json['name'], userList: json['user_list']);
+        id: json['id'], name: json['name'], userList: json['userList']);
   }
 }

@@ -22,23 +22,20 @@ class User {
       required this.age,
       required this.sportTypeList,
       required this.avatar,
-      required this.gender,
-      required this.likeList,
-      required this.receivedLikeList});
+      required this.gender});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        id: json['id'],
-        username: json['username'],
-        email: json['email'],
-        password: json['password'],
-        bio: json['bio'],
-        avatar: json['avatar'],
-        city: json['city'],
-        age: json['age'],
-        sportTypeList: json['sport_type_list'],
-        gender: json['gender'],
-        likeList: json['like_list'],
-        receivedLikeList: json['received_like_list']);
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      password: json['password'],
+      bio: json['bio'],
+      avatar: json['avatar'],
+      city: json['city'],
+      age: json['age'],
+      sportTypeList: json['sportTypeList'],
+      gender: json['gender'],
+    );
   }
 }

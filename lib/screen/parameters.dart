@@ -144,7 +144,7 @@ class _ParametersState extends State<Parameters> {
                   padding: MaterialStateProperty.all<EdgeInsets>(
                       const EdgeInsets.all(20))),
               onPressed: () {
-                storage.delete(key: "token");
+                storage.deleteAll();
                 redirect();
               },
               icon: const Icon(Icons.logout, color: Colors.white, size: 30),
