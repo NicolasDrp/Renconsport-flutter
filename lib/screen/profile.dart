@@ -41,7 +41,7 @@ class _ProfileState extends State<Profile> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12)),
-                color: AdaptiveTheme.of(context).theme.primaryColor,
+                color: AdaptiveTheme.of(context).theme.cardColor,
               ),
               child: Column(
                 children: [
@@ -127,7 +127,10 @@ class _ProfileState extends State<Profile> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AdaptiveTheme.of(context).theme.canvasColor,
+                          border: Border.all(
+                            color: AdaptiveTheme.of(context).theme.primaryColor,
+                          ),
                           borderRadius: BorderRadius.circular(12)),
                       width: 340,
                       child: Column(children: [

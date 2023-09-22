@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 class Tags extends StatelessWidget {
   final List<String> sports;
@@ -18,7 +19,10 @@ class Tags extends StatelessWidget {
             .map((sportName) => Container(
                 margin: const EdgeInsets.fromLTRB(0, 10, 10, 0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AdaptiveTheme.of(context).theme.canvasColor,
+                  border: Border.all(
+                    color: AdaptiveTheme.of(context).theme.primaryColor,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
