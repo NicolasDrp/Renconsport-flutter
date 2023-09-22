@@ -32,10 +32,10 @@ class ProfileCard extends StatelessWidget {
         children: [
           Flexible(
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage("assets/placeholder_avatar.png")),
+                    image: AssetImage(candidate.avatar)),
               ),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,
