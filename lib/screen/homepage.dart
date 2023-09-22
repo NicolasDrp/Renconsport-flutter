@@ -11,6 +11,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:renconsport_flutter/widget/tags.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.nav});
@@ -75,6 +76,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
+                    Row(children: [
+                      Tags(sports: ["Foot", "Basket", "Boxe"])
+                    ]),
+                    SizedBox(height: 10,),
                     Card(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
