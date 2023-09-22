@@ -40,11 +40,15 @@ class _HomePageState extends State<HomePage> {
           future: fetchUser(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
-              idTarget = snapshot.data![indexProfile].id;
-              return Column(
-                children: [
-                  CupertinoPageScaffold(
-                    child: Column(
+              if (indexProfile >= 0 && indexProfile < snapshot.data!.length) {
+                idTarget = snapshot.data![indexProfile].id;
+
+                if (idTarget == int.parse(idToken)) {
+                  indexProfile++;
+                }
+                return Column(
+                  children: [
+                    Column(
                       children: [
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.55,
@@ -60,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                             },
                             onSwipe: _swipe,
                             onEnd: _onEnd,
-                            cardsCount: snapshot.data!.length,
+                            cardsCount: snapshot.data!.length - 1,
                             cardsBuilder: (BuildContext context, int index) {
                               return ProfileCard(
                                 candidate: snapshot.data![indexProfile],
@@ -71,47 +75,53 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                  ),
-                  Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color:
-                                AdaptiveTheme.of(context).theme.primaryColor),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                "${snapshot.data![indexProfile].username},${(snapshot.data![indexProfile].age).toString()}",
-                                style: const TextStyle(fontSize: 25)),
-                            Text(
-                              snapshot.data![indexProfile].city,
-                              style: const TextStyle(fontSize: 18),
-                            )
-                          ],
-                        ),
-                        Text(
-                          snapshot.data![indexProfile].bio,
-                          style: const TextStyle(fontSize: 16),
-                        )
-                      ]),
+                    Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color:
+                                  AdaptiveTheme.of(context).theme.primaryColor),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  "${snapshot.data![indexProfile].username},${(snapshot.data![indexProfile].age).toString()}",
+                                  style: const TextStyle(fontSize: 25)),
+                              Text(
+                                snapshot.data![indexProfile].city,
+                                style: const TextStyle(fontSize: 18),
+                              )
+                            ],
+                          ),
+                          Text(
+                            snapshot.data![indexProfile].bio,
+                            style: const TextStyle(fontSize: 16),
+                          )
+                        ]),
+                      ),
                     ),
-                  ),
-                  // snapshot.data![9].avatarUrl != null
-                  //     ? Text((snapshot.data![9].avatarUrl).toString())
-                  //     : Text("url de l'image")
-                ],
-              );
+                    // snapshot.data![9].avatarUrl != null
+                    //     ? Text((snapshot.data![9].avatarUrl).toString())
+                    //     : Text("url de l'image")
+                  ],
+                );
+              }
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            // By default, show a loading spinner.
-            return const CircularProgressIndicator();
+            if (indexProfile == 0) {
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            } else {
+              return Center(
+                  child: Text(
+                      "Aucun utilisateur ne correspond à vos préférences"));
+            }
           },
         ),
       ],
@@ -153,10 +163,10 @@ class _HomePageState extends State<HomePage> {
 
   //TODO: Récuperer l'id de l'utilisateur connecter
   void _onEnd() {
-    setState(() {
-      indexProfile = 0;
-      _futureBuilderKey = UniqueKey();
-    });
+    // setState(() {
+    //   indexProfile = 0;
+    //   _futureBuilderKey = UniqueKey();
+    // });
   }
 
   Future<List<User>> fetchUser() async {
