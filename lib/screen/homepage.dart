@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:appinio_swiper/appinio_swiper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/user.dart';

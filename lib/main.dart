@@ -10,11 +10,16 @@ import 'package:renconsport_flutter/screen/profile_settings.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
 import 'package:renconsport_flutter/widget/bottom_app_bar.dart';
 import 'package:renconsport_flutter/widget/custom_app_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 const String urlApi = "https://renconsport-api.osc-fr1.scalingo.io/api";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
@@ -26,7 +31,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   late List<Widget> pageList;
-  int pageIndex = 0   ;
+  int pageIndex = 0;
   String currentTutorial = "placeholder"; // TODO: implement tutorial
   bool showBars = true;
 

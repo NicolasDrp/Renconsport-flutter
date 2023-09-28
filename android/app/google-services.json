@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "342752663992",
+    "project_id": "renconsport-d8097",
+    "storage_bucket": "renconsport-d8097.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342752663992:android:e593f3556e267ea51c974d",
+        "android_client_info": {
+          "package_name": "com.example.renconsport_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsbkZGVQWQvK1MNvSzTjwFWnKYkMBJTnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
