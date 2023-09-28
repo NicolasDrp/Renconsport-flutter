@@ -49,8 +49,10 @@ class _ChatState extends State<Chat> {
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
                       return (data['sender'] == id)
-                          ? Text("A droite")
-                          : Text("A gauche");
+                          ? Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(data['text']))
+                          : Text(data['text']);
                     })
                     .toList()
                     .cast(),
