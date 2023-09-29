@@ -45,6 +45,7 @@ class _ChatState extends State<Chat> {
 
             return Expanded(
               child: ListView(
+                reverse: true,
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot document) {
                       print(id);
