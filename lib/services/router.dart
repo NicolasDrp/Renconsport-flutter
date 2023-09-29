@@ -43,7 +43,7 @@ class _CustomRouterState extends State<CustomRouter> {
     final List<Widget> pageList = [
       HomePage(nav: widget.nav),
       const Sessions(),
-      Contacts(nav: widget.nav),
+      Contacts(nav: widget.nav, payload: widget.payload),
       Profile(nav: widget.nav, payload: widget.payload),
       Parameters(nav: widget.nav),
       Login(nav: widget.nav),

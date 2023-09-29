@@ -3,11 +3,17 @@ import 'package:renconsport_flutter/modal/relation.dart';
 import 'package:renconsport_flutter/services/relation_service.dart';
 import 'package:renconsport_flutter/widget/custom_contact.dart';
 
-class Contacts extends StatelessWidget {
-  const Contacts({super.key, required this.nav});
+class Contacts extends StatefulWidget {
+  Contacts({super.key, required this.nav, required this.payload});
 
   final Function nav;
+  final Map<String, dynamic> payload;
 
+  @override
+  State<Contacts> createState() => _ContactsState();
+}
+
+class _ContactsState extends State<Contacts> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -29,11 +35,20 @@ class Contacts extends StatelessWidget {
                   child: ListView.builder(
                       itemCount: relations.length,
                       itemBuilder: (context, index) {
+                        bool senderIsUser =
+                            relations[index].sender == widget.payload['id'];
+                        print("senderIsUser: $senderIsUser");
+                        print("sender: ${relations[index].sender}");
+                        print("target: ${relations[index].target}");
+                        print("payload id ${widget.payload['id']}");
                         return GestureDetector(
                           child: CustomContact(
-                              name: relations[index].sender, isNew: true),
+                              id: (senderIsUser)
+                                  ? relations[index].target
+                                  : relations[index].sender,
+                              isNew: true),
                           onTap: () async {
-                            nav(8);
+                            widget.nav(8, null);
                           },
                         );
                       }),

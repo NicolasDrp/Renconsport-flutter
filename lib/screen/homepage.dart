@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void redirect() {
-    widget.nav(5);
+    widget.nav(5, null);
   }
 
   void _swipe(int index, AppinioSwiperDirection direction) {

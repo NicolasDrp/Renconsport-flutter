@@ -33,7 +33,7 @@ class _ParametersState extends State<Parameters> {
           tileColor: AdaptiveTheme.of(context).theme.cardColor,
         ),
         GestureDetector(
-          onTap: () => widget.nav(7),
+          onTap: () => widget.nav(7, null),
           child: ListTile(
             title: Center(
               child: Padding(
@@ -158,6 +158,6 @@ class _ParametersState extends State<Parameters> {
   }
 
   void redirect() {
-    widget.nav(5);
+    widget.nav(5, null);
   }
 }

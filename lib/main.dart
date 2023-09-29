@@ -74,7 +74,7 @@ class _MainAppState extends State<MainApp> {
           appBar: showBars
               ? CustomAppbar(
                   tutorial: tutorialList[currentTutorial],
-                  callback: navigateToPage,
+                  nav: navigateToPage,
                 )
               : null,
           body: CustomRouter(

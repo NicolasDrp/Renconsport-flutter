@@ -33,26 +33,38 @@ class User {
       required this.targetRelationList});
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
-      password: json['password'],
-      bio: json['bio'],
-      avatar: json['avatar'],
-      city: json['city'],
-      age: json['age'],
-      sportTypeList: json['sportTypeList'],
-      gender: json['gender'],
-      likeList: json['likeList'],
-      receivedLikeList: json['receivedLikeList'],
-      relationList: List.generate(json['relationList'].length, (index) {
-        return Relation.fromJson(json['targetRelationList'][index]);
-      }),
-      targetRelationList:
+    List<Relation> relationList;
+    if (json['relationList'].length > 0) {
+      relationList = List.generate(json['relationList'].length, (index) {
+        return Relation.fromJson(json['relationList'][index]);
+      });
+    } else {
+      relationList = [];
+    }
+
+    List<Relation> targetRelationList;
+    if (json['targetRelationList'].length > 0) {
+      targetRelationList =
           List.generate(json['targetRelationList'].length, (index) {
         return Relation.fromJson(json['targetRelationList'][index]);
-      }),
-    );
+      });
+    } else {
+      targetRelationList = [];
+    }
+    return User(
+        id: json['id'],
+        username: json['username'],
+        email: json['email'],
+        password: json['password'],
+        bio: json['bio'],
+        avatar: json['avatar'],
+        city: json['city'],
+        age: json['age'],
+        sportTypeList: json['sportTypeList'],
+        gender: json['gender'],
+        likeList: json['likeList'],
+        receivedLikeList: json['receivedLikeList'],
+        relationList: relationList,
+        targetRelationList: targetRelationList);
   }
 }
