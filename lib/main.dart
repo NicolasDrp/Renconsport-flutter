@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/screen/Register.dart';
+import 'package:renconsport_flutter/screen/chat.dart';
 import 'package:renconsport_flutter/screen/contacts.dart';
 import 'package:renconsport_flutter/screen/homepage.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
@@ -63,7 +64,8 @@ class _MainAppState extends State<MainApp> {
       Parameters(nav: navigateToPage),
       Login(nav: navigateToPage),
       Register(nav: navigateToPage),
-      ProfileSettings(nav: navigateToPage)
+      ProfileSettings(nav: navigateToPage),
+      Chat(nav: navigateToPage),
     ];
   }
 

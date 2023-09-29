@@ -22,6 +22,9 @@ class CustomDatabase {
 
   static Stream<QuerySnapshot> streamData(CollectionReference collection) {
     String collectionName = collection.path;
-    return database.collection(collectionName).snapshots();
+    return database
+        .collection(collectionName)
+        .orderBy('time', descending: true)
+        .snapshots();
   }
 }

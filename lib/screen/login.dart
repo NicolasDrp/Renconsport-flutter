@@ -11,7 +11,7 @@ import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.nav});
-  final Function(int index) nav;
+  final Function nav;
   @override
   State<Login> createState() => _LoginState();
 }

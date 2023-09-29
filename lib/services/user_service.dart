@@ -7,11 +7,10 @@ import 'package:renconsport_flutter/modal/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  final FlutterSecureStorage _storage = FlutterSecureStorage();
+  static final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   static Future<String> getCurrentToken() async {
-    FlutterSecureStorage storage = FlutterSecureStorage();
-    String? token = await storage.read(key: "token");
+    String? token = await _storage.read(key: "token");
     return token!;
   }
 
@@ -27,7 +26,7 @@ class UserService {
     }
   }
 
-  Future<String> getCurrentUserId() async {
+  static Future<String> getCurrentUserId() async {
     String? userId = await _storage.read(key: "id");
     return userId!;
   }
