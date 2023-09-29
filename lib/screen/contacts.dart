@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:renconsport_flutter/modal/user.dart';
-import 'package:renconsport_flutter/services/user_service.dart';
+import 'package:renconsport_flutter/modal/relation.dart';
+import 'package:renconsport_flutter/services/relation_service.dart';
 import 'package:renconsport_flutter/widget/custom_contact.dart';
-import 'package:http/http.dart' as http;
 
 class Contacts extends StatelessWidget {
   const Contacts({super.key, required this.nav});
@@ -14,21 +10,41 @@ class Contacts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Center(
-              child: Text("Discussions",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w400))),
-        ),
-        GestureDetector(
-          child: CustomContact(name: "Haroun tounde", isNew: true),
-          onTap: () async {
-            nav(8);
-          },
-        ),
-      ],
-    );
+    return Column(children: [
+      Padding(
+        padding: EdgeInsets.all(12.0),
+        child: Center(
+            child: Text("Discussions",
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w400))),
+      ),
+      FutureBuilder<List<Relation>>(
+          future: RelationService.fetchRelationsByCurrentUser(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              } else if (snapshot.hasData) {
+                List<Relation> relations = snapshot.data!;
+                return Expanded(
+                  child: ListView.builder(
+                      itemCount: relations.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          child: CustomContact(
+                              name: relations[index].sender, isNew: true),
+                          onTap: () async {
+                            nav(8);
+                          },
+                        );
+                      }),
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
+            } else {
+              return CircularProgressIndicator();
+            }
+          })
+    ]);
   }
 }

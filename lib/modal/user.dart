@@ -1,3 +1,5 @@
+import 'package:renconsport_flutter/modal/relation.dart';
+
 class User {
   final int id;
   final String username;
@@ -11,8 +13,8 @@ class User {
   final String gender;
   final List<dynamic> likeList;
   final List<dynamic> receivedLikeList;
-  final List<dynamic> relationList;
-  final List<dynamic> targetRelationList;
+  final List<Relation> relationList;
+  final List<Relation> targetRelationList;
 
   User(
       {required this.id,
@@ -44,8 +46,13 @@ class User {
       gender: json['gender'],
       likeList: json['likeList'],
       receivedLikeList: json['receivedLikeList'],
-      relationList: json['relationList'],
-      targetRelationList: json['targetRelationList'],
+      relationList: List.generate(json['relationList'].length, (index) {
+        return Relation.fromJson(json['targetRelationList'][index]);
+      }),
+      targetRelationList:
+          List.generate(json['targetRelationList'].length, (index) {
+        return Relation.fromJson(json['targetRelationList'][index]);
+      }),
     );
   }
 }

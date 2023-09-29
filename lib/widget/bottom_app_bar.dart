@@ -47,7 +47,7 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
       selectedFontSize: 0,
       unselectedFontSize: 0,
       onTap: (value) {
-        widget.callback(value);
+        widget.callback(value, null);
       },
       items: const [
         BottomNavigationBarItem(
