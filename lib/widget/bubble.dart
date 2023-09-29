@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Importez le package intl pour formater la date.
 
 class Bubble extends StatelessWidget {
   const Bubble({
@@ -12,8 +13,16 @@ class Bubble extends StatelessWidget {
   final bool isReceived;
   final String time;
 
+  String formatDateTime(String dateTimeString) {
+    final dateTime = DateTime.parse(dateTimeString);
+    final formattedDate = DateFormat('dd/MM - HH:mm').format(dateTime);
+    return formattedDate;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final formattedTime = formatDateTime(time);
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -26,7 +35,7 @@ class Bubble extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Text(
-                  time,
+                  formattedTime,
                   style: TextStyle(
                     color: Color(0xFF807979),
                     fontSize: 12.0,
@@ -56,7 +65,7 @@ class Bubble extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  time,
+                  formattedTime,
                   style: TextStyle(
                     color: Color(0xFF807979),
                     fontSize: 12.0,
