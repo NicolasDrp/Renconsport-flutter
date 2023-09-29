@@ -13,9 +13,10 @@ import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 import 'package:renconsport_flutter/widget/custom_input.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key, required this.nav});
+  const Profile({super.key, required this.nav, required this.payload});
 
   final Function nav;
+  final Map<String, dynamic> payload;
 
   @override
   State<Profile> createState() => _ProfileState();
