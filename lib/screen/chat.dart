@@ -6,9 +6,10 @@ import 'package:renconsport_flutter/services/user_service.dart';
 import 'package:renconsport_flutter/widget/bubble.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({super.key, required this.nav});
+  const Chat({super.key, required this.nav, required this.payload});
 
   final Function nav;
+  final Map<String, dynamic> payload;
 
   @override
   State<Chat> createState() => _ChatState();
@@ -18,7 +19,7 @@ class _ChatState extends State<Chat> {
   final TextEditingController controller = TextEditingController();
   final Stream<QuerySnapshot> massagesStream =
       CustomDatabase.streamData(CustomDatabase.chats);
-  String id = "ersdfftgyhujikolpm1";
+  String id = "";
 
   @override
   void initState() {

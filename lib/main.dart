@@ -28,11 +28,13 @@ class _MainAppState extends State<MainApp> {
   int pageIndex = 0;
   int currentTutorial = 0; // TODO: implement tutorial
   bool showBars = true;
+  Map<String, dynamic> payload = {};
 
-  void navigateToPage(int index) {
+  void navigateToPage(int index, Map<String, dynamic>? newPayload) {
     if (index != pageIndex) {
       setState(() {
         pageIndex = index;
+        payload = newPayload!;
       });
     }
     if (index == 5 || index == 6 || index == 7) {
@@ -71,7 +73,7 @@ class _MainAppState extends State<MainApp> {
                   callback: navigateToPage,
                 )
               : null,
-          body: CustomRouter(index: pageIndex, nav: navigateToPage),
+          body: CustomRouter(index: pageIndex, nav: navigateToPage, payload: payload),
           bottomNavigationBar: showBars
               ? BottomAppBarWidget(
                   callback: navigateToPage,
