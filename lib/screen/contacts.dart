@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:renconsport_flutter/services/user_service.dart';
 
 class Contacts extends StatelessWidget {
   const Contacts({super.key, required this.nav});
@@ -10,8 +9,7 @@ class Contacts extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () async {
-          String idUser = await UserService.getCurrentUserId();
-          nav(8, idUser);
+          nav(8);
         },
         child: Icon(Icons.person_add_alt_1));
   }

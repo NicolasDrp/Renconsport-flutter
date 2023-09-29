@@ -1,7 +1,9 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/services/database.dart';
 import 'package:renconsport_flutter/services/user_service.dart';
+import 'package:renconsport_flutter/widget/bubble.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key, required this.nav});
@@ -51,8 +53,14 @@ class _ChatState extends State<Chat> {
                       return (data['sender'] == id)
                           ? Align(
                               alignment: Alignment.centerRight,
-                              child: Text(data['text']))
-                          : Text(data['text']);
+                              child: Bubble(
+                                  isReceived: false,
+                                  message: data['text'],
+                                  time: data['time']))
+                          : Bubble(
+                              isReceived: true,
+                              message: data['text'],
+                              time: data['time']);
                     })
                     .toList()
                     .cast(),
@@ -60,20 +68,36 @@ class _ChatState extends State<Chat> {
             );
           },
         ),
-        TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'New message',
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: 70,
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(
+                        color: AdaptiveTheme.of(context).theme.hintColor)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide(
+                        color: AdaptiveTheme.of(context).theme.hintColor)),
+                labelText: 'Message',
+              ),
+            ),
           ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            sendMessage(controller.text);
-            controller.clear();
-          },
-          child: const Text('Send'),
-        ),
+          IconButton(
+              onPressed: () {
+                sendMessage(controller.text);
+                controller.clear();
+              },
+              icon: Icon(
+                Icons.send,
+                color: AdaptiveTheme.of(context).theme.hintColor,
+              ))
+        ])
       ],
     );
   }
