@@ -11,6 +11,8 @@ class User {
   final String gender;
   final List<dynamic> likeList;
   final List<dynamic> receivedLikeList;
+  final List<dynamic> relationList;
+  final List<dynamic> targetRelationList;
 
   User(
       {required this.id,
@@ -24,7 +26,9 @@ class User {
       required this.avatar,
       required this.gender,
       required this.likeList,
-      required this.receivedLikeList});
+      required this.receivedLikeList,
+      required this.relationList,
+      required this.targetRelationList});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -40,6 +44,8 @@ class User {
       gender: json['gender'],
       likeList: json['likeList'],
       receivedLikeList: json['receivedLikeList'],
+      relationList: json['relationList'],
+      targetRelationList: json['targetRelationList'],
     );
   }
 }

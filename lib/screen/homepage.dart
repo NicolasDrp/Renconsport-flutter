@@ -217,8 +217,8 @@ class _HomePageState extends State<HomePage> {
       },
       body: json.encode({
         "isLike": isLike,
-        "idUser": "api/users/$idUser",
-        "idTarget": "api/users/$idTarget",
+        "sender": "api/users/$idUser",
+        "target": "api/users/$idTarget",
       }),
     );
 
