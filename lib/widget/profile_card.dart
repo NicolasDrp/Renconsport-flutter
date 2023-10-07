@@ -35,7 +35,7 @@ class ProfileCard extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(candidate.avatar)),
+                    image: AssetImage((candidate.avatar != null) ? candidate.avatar : "assets/placeholder_avatar.png")),
               ),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,

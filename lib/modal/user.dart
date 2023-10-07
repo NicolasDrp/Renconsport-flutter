@@ -1,3 +1,4 @@
+import 'package:renconsport_flutter/modal/like.dart';
 import 'package:renconsport_flutter/modal/relation.dart';
 
 class User {
@@ -11,7 +12,7 @@ class User {
   final int age;
   final List<dynamic> sportTypeList;
   final String gender;
-  final List<dynamic> likeList;
+  final List<Like> likeList;
   final List<dynamic> receivedLikeList;
   final List<Relation> relationList;
   final List<Relation> targetRelationList;
@@ -51,6 +52,16 @@ class User {
     } else {
       targetRelationList = [];
     }
+
+    List<Like> likeList;
+    if (json['likeList'].length > 0) {
+      likeList =
+          List.generate(json['likeList'].length, (index) {
+        return Like.fromJson(json['likeList'][index]);
+      });
+    } else {
+      likeList = [];
+    }
     return User(
         id: json['id'],
         username: json['username'],
@@ -62,7 +73,7 @@ class User {
         age: json['age'],
         sportTypeList: json['sportTypeList'],
         gender: json['gender'],
-        likeList: json['likeList'],
+        likeList: likeList,
         receivedLikeList: json['receivedLikeList'],
         relationList: relationList,
         targetRelationList: targetRelationList);

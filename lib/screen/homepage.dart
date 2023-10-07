@@ -9,7 +9,6 @@ import 'package:renconsport_flutter/widget/profile_card.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:renconsport_flutter/widget/tags.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,19 +32,25 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     checkLogged();
+    getIdUser();
+    UserService.getCurrentUserId();
+
+    fetchUserNotLiked();
     return Column(
       children: [
         FutureBuilder<List<User>>(
           key: _futureBuilderKey,
-          future: fetchUser(),
+          future: fetchUserNotLiked(),
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
-              if (indexProfile >= 0 && indexProfile < snapshot.data!.length) {
-                idTarget = snapshot.data![indexProfile].id;
-
-                if (idTarget == int.parse(idToken)) {
-                  indexProfile++;
-                }
+              if (snapshot.data!.isEmpty) {
+                return Center(
+                  child: Text(
+                    "Aucun utilisateur ne correspond à vos préférences",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              } else {
                 return Column(
                   children: [
                     Column(
@@ -64,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                             },
                             onSwipe: _swipe,
                             onEnd: _onEnd,
-                            cardsCount: snapshot.data!.length - 1,
+                            cardsCount: snapshot.data!.length,
                             cardsBuilder: (BuildContext context, int index) {
                               return ProfileCard(
                                 candidate: snapshot.data![indexProfile],
@@ -78,7 +83,9 @@ class _HomePageState extends State<HomePage> {
                     Row(children: [
                       Tags(sports: ["Foot", "Basket", "Boxe"])
                     ]),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Card(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -118,20 +125,54 @@ class _HomePageState extends State<HomePage> {
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            if (indexProfile == 0) {
-              // By default, show a loading spinner.
-              return const CircularProgressIndicator();
-            } else {
-              return Center(
-                  child: Text(
-                      "Aucun utilisateur ne correspond à vos préférences"));
-            }
+            return const Center(
+              child: Column(children: [
+                Text("Chargement des utilisateurs"),
+                CircularProgressIndicator()
+              ]),
+            );
           },
         ),
       ],
     );
+  } //           const BorderRadius.all(Radius.circular(10))),
+  //   child: Padding(
+  //     padding: const EdgeInsets.all(12.0),
+  //     child: Column(children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+
+  void getIdUser() async {
+    String idUSer = await UserService.getCurrentUserId();
+    idToken = idUSer;
   }
 
+  Future<List<User>> fetchUserNotLiked() async {
+    List<User> listUser = await UserService.fetchUsers();
+    User user = await UserService.fetchUserFuture(
+        "/api/users/$idToken", UserService.getCurrentToken());
+
+    List<String> idList =
+        listUser.map((element) => element.id.toString()).toList();
+
+    List<String> idLikeList =
+        user.likeList.map((element) => element.target).toList();
+
+    idList.removeWhere((element) => idLikeList.contains(element));
+    idList.removeWhere((element) => idToken == (element));
+
+    List<User> usersNotLiked = listUser
+        .where((element) => idList.contains(element.id.toString()))
+        .toList();
+
+    // return [];
+    print(usersNotLiked);
+    return usersNotLiked;
+  }
+
+// TODO: vérifier utilité fonction
   void checkLogged() async {
     String? token;
     bool valid = false;
@@ -155,50 +196,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _swipe(int index, AppinioSwiperDirection direction) {
-    if (direction.name == "left") {
-      addLike(int.parse(idToken), idTarget, false);
-    } else if (direction.name == "right") {
-      addLike(int.parse(idToken), idTarget, true);
-    }
+    // if (direction.name == "left") {
+    //   addLike(int.parse(idToken), idTarget, false);
+    // } else if (direction.name == "right") {
+    //   addLike(int.parse(idToken), idTarget, true);
+    // }
     setState(() {
       indexProfile++;
     });
   }
 
-  //TODO: Récuperer l'id de l'utilisateur connecter
   void _onEnd() {
-    // setState(() {
-    //   indexProfile = 0;
-    //   _futureBuilderKey = UniqueKey();
-    // });
-  }
-
-  Future<List<User>> fetchUser() async {
-    String? token = await storage.read(key: "token");
-    if (token == null) {
-      throw Exception(
-          ("Token not found")); // Gérer le cas où le token n'est pas disponible
-    }
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    idToken = decodedToken['id'];
-    final response = await http.get(
-        Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'),
-        headers: {
-          HttpHeaders.authorizationHeader: token,
-        });
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      final result = jsonDecode(response.body);
-      return List.generate(result['hydra:member'].length, (i) {
-        return User.fromJson(result['hydra:member'][i]);
-      });
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load User');
-    }
+    setState(() {
+      indexProfile = 0;
+      _futureBuilderKey = UniqueKey();
+    });
   }
 
   Future<void> addLike(int idUser, int idTarget, bool isLike) async {
