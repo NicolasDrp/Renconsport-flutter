@@ -45,12 +45,16 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData && snapshot.data != null) {
               if (snapshot.data!.isEmpty) {
                 return Center(
+                  //TODO : changer le heightFactor par plus optimiser
+                  heightFactor: 11,
                   child: Text(
                     "Aucun utilisateur ne correspond à vos préférences",
-                    style: TextStyle(fontSize: 16),
+                    style: AdaptiveTheme.of(context).theme.textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
                   ),
                 );
               } else {
+                idTarget = snapshot.data![indexProfile].id;
                 return Column(
                   children: [
                     Column(
@@ -116,33 +120,31 @@ class _HomePageState extends State<HomePage> {
                         ]),
                       ),
                     ),
-                    // snapshot.data![9].avatarUrl != null
-                    //     ? Text((snapshot.data![9].avatarUrl).toString())
-                    //     : Text("url de l'image")
                   ],
                 );
               }
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            return const Center(
-              child: Column(children: [
-                Text("Chargement des utilisateurs"),
-                CircularProgressIndicator()
-              ]),
+            return Center(
+              heightFactor: 11,
+              child: Column(
+                children: [
+                  Text(
+                    "Chargement des utilisateurs",
+                    style: AdaptiveTheme.of(context).theme.textTheme.bodyLarge,
+                  ),
+                  CircularProgressIndicator(
+                    color: AdaptiveTheme.of(context).theme.primaryColor,
+                  ),
+                ],
+              ),
             );
           },
         ),
       ],
     );
-  } //           const BorderRadius.all(Radius.circular(10))),
-  //   child: Padding(
-  //     padding: const EdgeInsets.all(12.0),
-  //     child: Column(children: [
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           Text(
+  }
 
   void getIdUser() async {
     String idUSer = await UserService.getCurrentUserId();
@@ -167,8 +169,6 @@ class _HomePageState extends State<HomePage> {
         .where((element) => idList.contains(element.id.toString()))
         .toList();
 
-    // return [];
-    print(usersNotLiked);
     return usersNotLiked;
   }
 
@@ -196,11 +196,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _swipe(int index, AppinioSwiperDirection direction) {
-    // if (direction.name == "left") {
-    //   addLike(int.parse(idToken), idTarget, false);
-    // } else if (direction.name == "right") {
-    //   addLike(int.parse(idToken), idTarget, true);
-    // }
+    if (direction.name == "left") {
+      addLike(int.parse(idToken), idTarget, false);
+    } else if (direction.name == "right") {
+      addLike(int.parse(idToken), idTarget, true);
+    }
     setState(() {
       indexProfile++;
     });
