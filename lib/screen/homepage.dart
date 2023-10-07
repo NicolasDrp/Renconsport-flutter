@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.data!.isEmpty) {
                 return Center(
                   //TODO : changer le heightFactor par plus optimiser
-                  heightFactor: 11,
+                  heightFactor: MediaQuery.of(context).size.height / 100,
                   child: Text(
                     "Aucun utilisateur ne correspond à vos préférences",
                     style: AdaptiveTheme.of(context).theme.textTheme.bodyLarge,
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               return Text('${snapshot.error}');
             }
             return Center(
-              heightFactor: 11,
+              heightFactor: MediaQuery.of(context).size.height / 100,
               child: Column(
                 children: [
                   Text(
