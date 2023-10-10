@@ -15,7 +15,7 @@ class CustomBackButton extends StatelessWidget {
           child: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              nav(index);
+              nav(index, null);
             },
           ),
         ));

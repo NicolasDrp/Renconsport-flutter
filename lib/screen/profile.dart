@@ -5,7 +5,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/user.dart';
 import 'package:renconsport_flutter/modal/sporttype.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:renconsport_flutter/widget/tags.dart';
@@ -200,9 +199,8 @@ class _ProfileState extends State<Profile> {
         throw Exception(
             ("Token not found")); // Gérer le cas où le token n'est pas disponible
       }
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      final response = await http
-          .get(Uri.parse("$urlApi/users/${decodedToken['id']}"), headers: {
+      final response =
+          await http.get(Uri.parse("$urlApi/users/$token"), headers: {
         HttpHeaders.authorizationHeader: token,
       });
       if (response.statusCode == 200) {

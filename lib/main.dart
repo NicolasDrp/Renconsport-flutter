@@ -34,7 +34,11 @@ class _MainAppState extends State<MainApp> {
     if (index != pageIndex) {
       setState(() {
         pageIndex = index;
-        payload = newPayload!;
+      });
+    }
+    if (newPayload != null) {
+      setState(() {
+        payload = newPayload;
       });
     }
     if (index == 5 || index == 6 || index == 7) {
@@ -70,10 +74,11 @@ class _MainAppState extends State<MainApp> {
           appBar: showBars
               ? CustomAppbar(
                   tutorial: tutorialList[currentTutorial],
-                  callback: navigateToPage,
+                  nav: navigateToPage,
                 )
               : null,
-          body: CustomRouter(index: pageIndex, nav: navigateToPage, payload: payload),
+          body: CustomRouter(
+              index: pageIndex, nav: navigateToPage, payload: payload),
           bottomNavigationBar: showBars
               ? BottomAppBarWidget(
                   callback: navigateToPage,

@@ -40,4 +40,26 @@ class UserService {
     User user = User.fromJson(jsonDecode(res.body));
     return user;
   }
+
+
+  static Future<List<User>> fetchUsers() async {
+    final String token = await UserService.getCurrentToken();
+    if (token == null) {
+      throw Exception(("Token not found"));
+    }
+    final response = await http.get(
+        Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'),
+        headers: {
+          HttpHeaders.authorizationHeader: token,
+        });
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      return List.generate(result['hydra:member'].length, (i) {
+        return User.fromJson(result['hydra:member'][i]);
+      });
+    } else {
+      throw Exception('Failed to load Users');
+    }
+  }
 }

@@ -1,3 +1,6 @@
+import 'package:renconsport_flutter/modal/like.dart';
+import 'package:renconsport_flutter/modal/relation.dart';
+
 class User {
   final int id;
   final String username;
@@ -9,10 +12,10 @@ class User {
   final int age;
   final List<dynamic> sportTypeList;
   final String gender;
-  final List<dynamic> likeList;
+  final List<Like> likeList;
   final List<dynamic> receivedLikeList;
-  final List<dynamic> relationList;
-  final List<dynamic> targetRelationList;
+  final List<Relation> relationList;
+  final List<Relation> targetRelationList;
 
   User(
       {required this.id,
@@ -31,21 +34,48 @@ class User {
       required this.targetRelationList});
 
   factory User.fromJson(Map<String, dynamic> json) {
+    List<Relation> relationList;
+    if (json['relationList'].length > 0) {
+      relationList = List.generate(json['relationList'].length, (index) {
+        return Relation.fromJson(json['relationList'][index]);
+      });
+    } else {
+      relationList = [];
+    }
+
+    List<Relation> targetRelationList;
+    if (json['targetRelationList'].length > 0) {
+      targetRelationList =
+          List.generate(json['targetRelationList'].length, (index) {
+        return Relation.fromJson(json['targetRelationList'][index]);
+      });
+    } else {
+      targetRelationList = [];
+    }
+
+    List<Like> likeList;
+    if (json['likeList'].length > 0) {
+      likeList =
+          List.generate(json['likeList'].length, (index) {
+        return Like.fromJson(json['likeList'][index]);
+      });
+    } else {
+      likeList = [];
+    }
     return User(
-      id: json['id'],
-      username: json['username'],
-      email: json['email'],
-      password: json['password'],
-      bio: json['bio'],
-      avatar: json['avatar'],
-      city: json['city'],
-      age: json['age'],
-      sportTypeList: json['sportTypeList'],
-      gender: json['gender'],
-      likeList: json['likeList'],
-      receivedLikeList: json['receivedLikeList'],
-      relationList: json['relationList'],
-      targetRelationList: json['targetRelationList'],
-    );
+        id: json['id'],
+        username: json['username'],
+        email: json['email'],
+        password: json['password'],
+        bio: json['bio'],
+        avatar: json['avatar'],
+        city: json['city'],
+        age: json['age'],
+        sportTypeList: json['sportTypeList'],
+        gender: json['gender'],
+        likeList: likeList,
+        receivedLikeList: json['receivedLikeList'],
+        relationList: relationList,
+        targetRelationList: targetRelationList);
   }
 }

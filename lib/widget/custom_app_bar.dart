@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppbar(
-      {super.key, required this.tutorial, required this.callback});
+      {super.key, required this.tutorial, required this.nav});
 
   final String tutorial;
-  final Function callback;
+  final Function nav;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             )),
         IconButton(
             onPressed: () {
-              callback(4);
+              nav(4, null);
             },
             icon: const Icon(
               Icons.settings_outlined,

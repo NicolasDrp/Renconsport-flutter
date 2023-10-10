@@ -113,7 +113,7 @@ class _RegisterState extends State<Register> {
                           recognizer: TapGestureRecognizer()
                             // TODO remplacer le lien vers les CGU
                             ..onTap = () {
-                              widget.nav(6);
+                              widget.nav(6, null);
                             })
                     ],
                   ),
@@ -274,7 +274,7 @@ class _RegisterState extends State<Register> {
             content: Text("Votre compte a bien été créé"),
           ),
         );
-        widget.nav(5);
+        widget.nav(5, null);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

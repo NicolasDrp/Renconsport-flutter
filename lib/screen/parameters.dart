@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:renconsport_flutter/widget/modal_confirmation.dart';
 
 class Parameters extends StatefulWidget {
   const Parameters({super.key, required this.nav});
@@ -33,7 +34,7 @@ class _ParametersState extends State<Parameters> {
           tileColor: AdaptiveTheme.of(context).theme.cardColor,
         ),
         GestureDetector(
-          onTap: () => widget.nav(7),
+          onTap: () => widget.nav(7, null),
           child: ListTile(
             title: Center(
               child: Padding(
@@ -133,31 +134,47 @@ class _ParametersState extends State<Parameters> {
           ),
         ),
         Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.20,
-                vertical: MediaQuery.of(context).size.width * 0.05),
-            child: ElevatedButton.icon(
-              style: ButtonStyle(
-                  elevation: MaterialStateProperty.all<double?>(5),
-                  backgroundColor: MaterialStatePropertyAll<Color>(
-                      AdaptiveTheme.of(context).theme.primaryColor),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.all(20))),
-              onPressed: () {
-                storage.deleteAll();
-                redirect();
-              },
-              icon: const Icon(Icons.logout, color: Colors.white, size: 30),
-              label: const Text(
-                "Déconnexion",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            )),
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.20,
+              vertical: MediaQuery.of(context).size.width * 0.05),
+          child: ElevatedButton.icon(
+            style: ButtonStyle(
+              elevation: MaterialStateProperty.all<double?>(5),
+              backgroundColor: MaterialStatePropertyAll<Color>(
+                  AdaptiveTheme.of(context).theme.primaryColor),
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                  const EdgeInsets.all(20)),
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ModalConfirmation(
+                    onConfirm: () {
+                      logout();
+                    },
+                    message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.logout, color: Colors.white, size: 30),
+            label: const Text(
+              "Déconnexion",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+        ),
       ],
     );
   }
 
   void redirect() {
-    widget.nav(5);
+    widget.nav(5, null);
+  }
+
+  void logout() {
+    storage.deleteAll();
+    redirect();
   }
 }

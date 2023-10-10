@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                                     decorationColor: Colors.blue),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    widget.nav(6);
+                                    widget.nav(6, null);
                                   })
                           ],
                         ),
@@ -119,7 +119,7 @@ class _LoginState extends State<Login> {
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         String id = decodedToken['id'];
         storage.write(key: 'id', value: id);
-        widget.nav(0);
+        widget.nav(0, null);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Email ou mot de passe incorrect")));

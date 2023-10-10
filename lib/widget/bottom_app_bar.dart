@@ -1,5 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:renconsport_flutter/services/user_service.dart';
 
 class BottomAppBarWidget extends StatefulWidget {
   const BottomAppBarWidget(
@@ -15,6 +16,7 @@ class BottomAppBarWidget extends StatefulWidget {
 class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
   @override
   Widget build(BuildContext context) {
+    // String currentId = "";
     bool isActive;
     int page = widget.currentPage;
     if (widget.currentPage > 3) {
@@ -46,8 +48,16 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
           .unselectedItemColor,
       selectedFontSize: 0,
       unselectedFontSize: 0,
-      onTap: (value) {
-        widget.callback(value);
+      onTap: (value) async {
+        String currentId = await UserService.getCurrentUserId();
+        Map<String, dynamic> payload = {};
+        if (value == 2) {
+          payload = {
+            'id': currentId,
+          };
+        }
+        print("payload: $payload");
+        widget.callback(value, (value == 2) ? payload : null);
       },
       items: const [
         BottomNavigationBarItem(
