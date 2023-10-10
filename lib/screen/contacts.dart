@@ -37,10 +37,10 @@ class _ContactsState extends State<Contacts> {
                       itemBuilder: (context, index) {
                         bool senderIsUser =
                             relations[index].sender == widget.payload['id'];
-                        print("senderIsUser: $senderIsUser");
-                        print("sender: ${relations[index].sender}");
-                        print("target: ${relations[index].target}");
-                        print("payload id ${widget.payload['id']}");
+                        Map<String, dynamic> payload = {
+                          'id': relations[index].id,
+                          'connectedUser': widget.payload['id'],
+                        };
                         return GestureDetector(
                           child: CustomContact(
                               id: (senderIsUser)
@@ -48,7 +48,7 @@ class _ContactsState extends State<Contacts> {
                                   : relations[index].sender,
                               isNew: true),
                           onTap: () async {
-                            widget.nav(8, null);
+                            widget.nav(8, payload);
                           },
                         );
                       }),

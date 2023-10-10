@@ -7,8 +7,8 @@ class CustomDatabase {
   static final CollectionReference chats = database.collection('chats');
 
   static void addData(
-      CollectionReference collection, Map<String, dynamic> data) {
-    collection.add(data);
+      CollectionReference collection, Map<String, dynamic> data, int chatId) {
+    collection.doc('$chatId').collection('messages').add(data);
   }
 
   static List<QueryDocumentSnapshot<Object?>> readData(
@@ -20,11 +20,31 @@ class CustomDatabase {
     return list;
   }
 
-  static Stream<QuerySnapshot> streamData(CollectionReference collection) {
+  static Stream<QuerySnapshot> streamData(
+      CollectionReference collection, int chatId) {
     String collectionName = collection.path;
     return database
         .collection(collectionName)
-        .orderBy('time', descending: true)
+        .doc('$chatId')
+        .collection('messages')
+        .orderBy("time", descending: true)
         .snapshots();
+  }
+
+  static Future<int> makeNewDoc(
+      CollectionReference<Object?> collection, int chatId) async {
+    collection.doc('$chatId');
+    return 1;
+  }
+
+  static Future<bool> checkExists(
+      CollectionReference collection, int chatId) async {
+    DocumentSnapshot<Object?> doc = await collection.doc('$chatId').get();
+    if (doc.exists) {
+      return true;
+    } else {
+      await makeNewDoc(collection, chatId);
+      return false;
+    }
   }
 }
