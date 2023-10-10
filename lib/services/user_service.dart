@@ -9,9 +9,9 @@ import 'package:http/http.dart' as http;
 class UserService {
   static final FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  static Future<String> getCurrentToken() async {
+  static Future<String?> getCurrentToken() async {
     String? token = await _storage.read(key: "token");
-    return token!;
+    return token;
   }
 
   static Future<bool> checkValidity(String token) async {
@@ -41,9 +41,8 @@ class UserService {
     return user;
   }
 
-
   static Future<List<User>> fetchUsers() async {
-    final String token = await UserService.getCurrentToken();
+    final String? token = await UserService.getCurrentToken();
     if (token == null) {
       throw Exception(("Token not found"));
     }

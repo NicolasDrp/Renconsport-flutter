@@ -10,29 +10,17 @@ import 'package:renconsport_flutter/screen/profile_settings.dart';
 import 'package:renconsport_flutter/screen/sessions.dart';
 
 class CustomRouter extends StatefulWidget {
-  CustomRouter({super.key, required this.nav, required this.index, required this.payload});
+  CustomRouter(
+      {super.key,
+      required this.nav,
+      required this.index,
+      required this.payload});
 
   final int index;
   final Function nav;
   final Map<String, dynamic> payload;
 
-  static final List<String> tutorialList = [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ];
+  static final List<String> tutorialList = ["", ""];
   @override
   State<CustomRouter> createState() => _CustomRouterState();
 }

@@ -1,6 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:renconsport_flutter/widget/custom_elevated_button.dart';
 
 class ModalConfirmation extends StatelessWidget {
   final Function onConfirm;

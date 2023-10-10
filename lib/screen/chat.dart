@@ -2,7 +2,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:renconsport_flutter/services/database.dart';
-import 'package:renconsport_flutter/services/user_service.dart';
 import 'package:renconsport_flutter/widget/bubble.dart';
 
 class Chat extends StatefulWidget {
@@ -17,14 +16,17 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController controller = TextEditingController();
-  final Stream<QuerySnapshot> massagesStream =
-      CustomDatabase.streamData(CustomDatabase.chats);
-  String id = "";
+  late Stream<QuerySnapshot> messagesStream;
+  late String id;
 
   @override
   void initState() {
     super.initState();
-    getId();
+    setState(() {
+      id = widget.payload["connectedUser"];
+      messagesStream =
+          CustomDatabase.streamData(CustomDatabase.chats, widget.payload['id']);
+    });
   }
 
   @override
@@ -33,15 +35,14 @@ class _ChatState extends State<Chat> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         StreamBuilder<QuerySnapshot>(
-          stream: massagesStream,
+          stream: messagesStream,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
-              return const Text('Something went wrong');
+              return const Text("Une erreur s'est produite");
             }
-
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Loading");
+              return const Text("Chargement des messages...");
             }
 
             return Expanded(
@@ -49,7 +50,6 @@ class _ChatState extends State<Chat> {
                 reverse: true,
                 children: snapshot.data!.docs
                     .map((DocumentSnapshot document) {
-                      print(id);
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
                       return (data['sender'] == id)
@@ -104,21 +104,12 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void sendMessage(String text) async {
-    String idUser = await UserService.getCurrentUserId();
+  void sendMessage(String text) {
     Map<String, dynamic> data = {
-      'sender': idUser,
+      'sender': widget.payload['connectedUser'],
       'text': text,
       'time': DateTime.now().toIso8601String(),
     };
-    CustomDatabase.addData(CustomDatabase.chats, data);
-  }
-
-  void getId() {
-    UserService.getCurrentUserId().then((value) {
-      setState(() {
-        id = value;
-      });
-    });
+    CustomDatabase.addData(CustomDatabase.chats, data, widget.payload["id"]);
   }
 }
