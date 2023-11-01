@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:renconsport_flutter/modal/relation.dart';
 import 'package:renconsport_flutter/services/relation_service.dart';
+import 'package:renconsport_flutter/services/user_service.dart';
 import 'package:renconsport_flutter/widget/custom_contact.dart';
 
 class Contacts extends StatefulWidget {
@@ -8,6 +10,7 @@ class Contacts extends StatefulWidget {
 
   final Function nav;
   final Map<String, dynamic> payload;
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   @override
   State<Contacts> createState() => _ContactsState();
@@ -41,16 +44,33 @@ class _ContactsState extends State<Contacts> {
                           'id': relations[index].id,
                           'connectedUser': widget.payload['id'],
                         };
-                        return GestureDetector(
-                          child: CustomContact(
-                              id: (senderIsUser)
-                                  ? relations[index].target
-                                  : relations[index].sender,
-                              isNew: true),
-                          onTap: () async {
-                            widget.nav(8, payload);
-                          },
-                        );
+
+                        String iri;
+                        if (senderIsUser) {
+                          iri = '/api/users/${relations[index].target}';
+                        } else {
+                          iri = '/api/users/${relations[index].sender}';
+                        }
+                        return FutureBuilder(
+                            future: UserService.fetchUserFuture(
+                                iri, UserService.getCurrentToken()),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasError) {
+                                  return Text("${snapshot.error}");
+                                } else if (snapshot.hasData) {
+                                  return GestureDetector(
+                                    child: CustomContact(user: snapshot.data!),
+                                    onTap: () => widget.nav(8, payload),
+                                  );
+                                } else {
+                                  return CircularProgressIndicator();
+                                }
+                              } else {
+                                return Text("");
+                              }
+                            });
                       }),
                 );
               } else {
