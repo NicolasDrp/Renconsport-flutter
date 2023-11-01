@@ -23,7 +23,6 @@ class RelationService {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       final result = jsonDecode(response.body);
-      print(result);
       return List.generate(result['hydra:member'].length, (i) {
         return Relation.fromJson(result['hydra:member'][i]);
       });
