@@ -16,7 +16,7 @@ class RelationService {
     if (token == null) {
       throw Exception(("Token not found"));
     }
-    final response = await http.get(Uri.parse("$urlApi/relations"), headers: {
+    final response = await http.get(Uri.parse("$urlApi/api/relations"), headers: {
       HttpHeaders.authorizationHeader: "bearer $token",
     });
     if (response.statusCode == 200) {
@@ -35,7 +35,7 @@ class RelationService {
 
   static Future<Relation> fetchRelationFuture(iri, token) async {
     var res = await http.get(
-        Uri.parse("https://renconsport-api.osc-fr1.scalingo.io$iri"),
+        Uri.parse("$urlApi$iri"),
         headers: {
           HttpHeaders.authorizationHeader: "bearer $token",
         });

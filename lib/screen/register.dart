@@ -252,7 +252,7 @@ class _RegisterState extends State<Register> {
 
   void sendForm() {
     http
-        .post(Uri.parse("$urlApi/users"),
+        .post(Uri.parse("$urlApi/api/users"),
             headers: {
               "Content-Type": "application/json; charset=UTF-8",
             },

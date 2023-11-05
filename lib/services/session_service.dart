@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:renconsport_flutter/main.dart';
 import 'package:renconsport_flutter/modal/session.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +15,7 @@ class SessionService {
       throw Exception(("Token not found"));
     }
     final response = await http.get(
-        Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/sessions'),
+        Uri.parse('$urlApi/api/sessions'),
         headers: {
           HttpHeaders.authorizationHeader: "bearer $token",
         });

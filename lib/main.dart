@@ -7,7 +7,7 @@ import 'package:renconsport_flutter/widget/custom_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-const String urlApi = "https://renconsport-api.osc-fr1.scalingo.io/api";
+const String urlApi = "https://renconsport-api.osc-fr1.scalingo.io";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
