@@ -44,15 +44,21 @@ class _SessionsState extends State<Sessions> {
                                 .format(sessions[index].dateTime);
                             final String time = DateFormat('kk:mm')
                                 .format(sessions[index].dateTime);
-                            return SessionCard(
-                              sportType: sessions[index].iriSportType,
-                              username: sessions[index].iriUser,
-                              date: date,
-                              time: time,
-                              description: sessions[index].description,
-                              length: sessions[index].duration,
-                              id: sessions[index].id,
-                              isLastSession: false,
+                            final String name =
+                                sessions[index].creator?.username ?? 'Anonyme';
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: SessionCard(
+                                sportType: sessions[index].iriSportType,
+                                username: name,
+                                date: date,
+                                time: time,
+                                description: sessions[index].description,
+                                length: sessions[index].duration,
+                                id: sessions[index].id,
+                                isLastSession: false,
+                              ),
                             );
                           }),
                     );
