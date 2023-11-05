@@ -5,7 +5,7 @@ class Session {
   final int duration;
   final DateTime dateTime;
   final String description;
-  final String iriUser;
+  final User? creator;
   final List<User> userList;
   final String iriSportType;
 
@@ -14,7 +14,7 @@ class Session {
     required this.duration,
     required this.dateTime,
     required this.description,
-    required this.iriUser,
+    required this.creator,
     required this.userList,
     required this.iriSportType,
   });
@@ -25,9 +25,10 @@ class Session {
         duration: json['duration'],
         dateTime: DateTime.parse(json['datetime']),
         description: json['description'],
-        iriUser: json['idUser'],
+        creator:
+            json.containsKey('creator') ? User.fromJson(json['creator']) : null,
         userList:
-            List<User>.from(json['userList'].map((x) => User.fromJson(x))),
-        iriSportType: json['idSportType']);
+            List<User>.from(json['user_list'].map((x) => User.fromJson(x))),
+        iriSportType: json['idSportType'] ?? 'Autre catégorie');
   }
 }

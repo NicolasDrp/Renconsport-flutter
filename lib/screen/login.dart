@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
     String email = _emailController.text;
     String password = _passwordController.text;
     http
-        .post(Uri.parse("$urlApi/login_check"),
+        .post(Uri.parse("$urlApi/api/login_check"),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },

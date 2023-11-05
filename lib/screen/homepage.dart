@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
     String formattedToken = "Bearer $token";
 
     final response = await http.post(
-      Uri.parse('$urlApi/likes'),
+      Uri.parse('$urlApi/api/likes'),
       headers: {
         HttpHeaders.authorizationHeader: formattedToken,
         HttpHeaders.contentTypeHeader: "application/json",

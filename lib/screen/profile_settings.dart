@@ -168,7 +168,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
     final response = await http
-        .get(Uri.parse("$urlApi/users/${decodedToken['id']}"), headers: {
+        .get(Uri.parse("$urlApi/api/users/${decodedToken['id']}"), headers: {
       HttpHeaders.authorizationHeader: token,
     });
     if (response.statusCode == 200) {
@@ -264,7 +264,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           ("Id not found")); // Gérer le cas où le token n'est pas disponible
     }
     http
-        .put(Uri.parse("$urlApi/users/$idUser"),
+        .put(Uri.parse("$urlApi/api/users/$idUser"),
             headers: {
               "Content-Type": "application/json; charset=UTF-8",
             },
@@ -344,7 +344,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           ("Token not found")); // Gérer le cas où le token n'est pas disponible
     }
     http
-        .patch(Uri.parse("$urlApi/users/$id"),
+        .patch(Uri.parse("$urlApi/api/users/$id"),
             headers: {
               "Content-Type": "application/json; charset=UTF-8",
             },

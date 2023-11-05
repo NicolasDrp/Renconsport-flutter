@@ -15,7 +15,7 @@ class UserService {
   }
 
   static Future<bool> checkValidity(String token) async {
-    var response = await http.post(Uri.parse("$urlApi/users"), headers: {
+    var response = await http.post(Uri.parse("$urlApi/api/users"), headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     });
@@ -33,7 +33,7 @@ class UserService {
 
   static Future<User> fetchUserFuture(iri, token) async {
     var res = await http.get(
-        Uri.parse("https://renconsport-api.osc-fr1.scalingo.io$iri"),
+        Uri.parse("$urlApi$iri"),
         headers: {
           HttpHeaders.authorizationHeader: "bearer $token",
         });
@@ -47,7 +47,7 @@ class UserService {
       throw Exception(("Token not found"));
     }
     final response = await http.get(
-        Uri.parse('https://renconsport-api.osc-fr1.scalingo.io/api/users'),
+        Uri.parse('$urlApi/api/users'),
         headers: {
           HttpHeaders.authorizationHeader: token,
         });

@@ -56,7 +56,6 @@ class _BottomAppBarWidgetState extends State<BottomAppBarWidget> {
             'id': currentId,
           };
         }
-        print("payload: $payload");
         widget.callback(value, (value == 2) ? payload : null);
       },
       items: const [

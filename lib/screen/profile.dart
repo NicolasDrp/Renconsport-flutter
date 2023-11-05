@@ -200,7 +200,7 @@ class _ProfileState extends State<Profile> {
             ("Token not found")); // Gérer le cas où le token n'est pas disponible
       }
       final response =
-          await http.get(Uri.parse("$urlApi/users/$token"), headers: {
+          await http.get(Uri.parse("$urlApi/api/users/$token"), headers: {
         HttpHeaders.authorizationHeader: token,
       });
       if (response.statusCode == 200) {
@@ -227,7 +227,7 @@ class _ProfileState extends State<Profile> {
     List<String> fetchSportFutures = [];
     for (var sportType in user.sportTypeList) {
       final response = await http.get(
-          Uri.parse("https://renconsport-api.osc-fr1.scalingo.io$sportType"),
+          Uri.parse("$urlApi$sportType"),
           headers: {
             HttpHeaders.authorizationHeader: "Bearer $token",
           });
@@ -271,7 +271,7 @@ class _ProfileState extends State<Profile> {
   void sendModificationForm(int id) {
     http
         .patch(
-      Uri.parse("$urlApi/users/$id"),
+      Uri.parse("$urlApi/api/users/$id"),
       headers: {
         "Content-Type":
             "application/merge-patch+json", // Update the Content-Type header
